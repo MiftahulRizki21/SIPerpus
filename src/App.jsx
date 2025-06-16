@@ -6,9 +6,9 @@ import './assets/tailwind.css';
 
 export default function App(){
     return(
-        <Suspense fallback={<Loading/>}>
+        <div>
             
-        </Suspense>
+        </div>
     )
 }
     
