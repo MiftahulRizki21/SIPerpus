@@ -1,0 +1,37 @@
+[
+    {
+        "kode_produk": "SDP001",
+        "nama_produk": "Nasi Goreng Special",
+        "harga": 35000,
+        "stok": 15,
+        "gambar": "public/img/nasigorengspecial.jpg"
+    },
+    {
+        "kode_produk": "SDP002",
+        "nama_produk": "Mie Ayam Bakso",
+        "harga": 25000,
+        "stok": 8,
+        "gambar": "public/img/mieayambakso.jpg"
+    },
+    {
+        "kode_produk": "SDP003",
+        "nama_produk": "Ayam Geprek",
+        "harga": 28000,
+        "stok": 0,
+        "gambar": "public/img/ayamgeprek.jpg"
+    },
+    {
+        "kode_produk": "SDP004",
+        "nama_produk": "Sate Ayam",
+        "harga": 30000,
+        "stok": 12,
+        "gambar": "public/img/sateayam.jpg"
+    },
+    {
+        "kode_produk": "SDP005",
+        "nama_produk": "Es Teh Manis",
+        "harga": 5000,
+        "stok": null,
+        "gambar": "public/img/esteh.jpg"
+    }
+]

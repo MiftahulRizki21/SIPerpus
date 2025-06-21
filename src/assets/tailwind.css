@@ -1,24 +1,29 @@
+
 @import "tailwindcss";
 
 @font-face {
-    font-family: 'Barlow';
-    src: url('/public/fonts/Barlow/Barlow-Regular.ttf');
-}
+    font-family: "Barlow";
+    src: url("/fonts/Barlow-Regular.ttf") format("truetype");
+  }
+
+  body {
+    font-family: "Barlow", sans-serif;
+  }
 
 @font-face {
     font-family: 'Poppins';
-    src: url('/public/fonts/Poppins/Poppins-Regular.ttf');
+    src: url('\Fonts\Poppins-Regular.ttf');
 }
 
 @font-face {
     font-family: 'Poppins-ExtraBold';
-    src: url('/public/fonts/Poppins/Poppins-ExtraBold.ttf');
+    src: url('\Fonts\Poppins-ExtraBold.ttf');
 }
 
-@theme{
-    --font-barlow: "Barlow", sans-serif;
-    --font-poppins: "Poppins-regular", sans-serif;
-    --font-poppins-extrabold: "Poppins-ExtraBold", sans-serif;
+@theme {
+    --font-barlow : "Barlow", sans-serif;
+    --font-poppins : "Poppins", sans-serif;
+    --font-poppinsextrabold : "Poppins-ExtraBold", sans-serif;
     --color-latar: #f3f4f6;
     --color-teks: #374151; 
     --color-teks-samping: #6b7280;
@@ -29,6 +34,7 @@
     --color-kuning: #f59e0b; 
 }
 
-body{
+body {
     @apply font-barlow;
 }
+
