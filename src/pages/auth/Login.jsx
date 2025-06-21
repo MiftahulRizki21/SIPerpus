@@ -1,134 +1,66 @@
-import axios from "axios";
-import { useState } from "react";
-import { BsFillExclamationDiamondFill } from "react-icons/bs";
-import { ImSpinner2 } from "react-icons/im";
-import { NavLink, useNavigate } from "react-router-dom";
+import React from 'react';
+import bgPerpus from '../../assets/perpus1.jpeg'; // gambar HD
+import '../../assets/tailwind.css';
 
-export default function Login() {
-  // Navigate
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [dataForm, setDataForm] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (evt) => {
-    const { name, value } = evt.target;
-    setDataForm({
-      ...dataForm,
-      [name]: value,
-    });
-  };
-
-  // Process form
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
-    setError(false);
-
-    axios
-      .post("../../src/assets/members.json", {
-        username: dataForm.email,
-        password: dataForm.password,
-      })
-      .then((response) => {
-        if (response.status !== 200) {
-          setError(response.data.message);
-          return;
-        }
-
-        navigate("/");
-      })
-      .catch((err) => {
-        if (err.response) {
-          setError(err.response.data.message || "An error occured");
-        } else {
-          setError(err.message || "An unknown error occured");
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-  // Error & Loading status
-  const errorInfo = error ? (
-    <div className="bg-red-200 mb-5 p-5 text-sm font-light text-gray-600 rounded flex items-center">
-      <BsFillExclamationDiamondFill className="text-red-600 me-2 text-lg" />
-      {error}
-    </div>
-  ) : null;
-
-  const loadingInfo = loading ? (
-    <div className="bg-red-200 mb-5 p-5 text-sm font-light text-gray-600 rounded flex items-center">
-      <ImSpinner2 className="me-2 animate-spin" />
-      Mohon Tunggu
-    </div>
-  ) : null;
+const Login = () => {
   return (
-    <div>
-      <h2 className="text-2xl font-semibold text-gray-700 mb-6 text-center">
-        Welcome Back!
-      </h2>
-
-      {errorInfo}
-      {loadingInfo}
-
-      <form onSubmit={handleSubmit}>
-        <div className="mb-5">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400"
-            placeholder="you@example.com"
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400"
-            placeholder="********"
-            onChange={handleChange}
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
-        >
-          Login
-        </button>
-
-        <div className="flex justify-between mt-4 text-sm">
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
+      style={{ backgroundImage: `url(${bgPerpus})` }}
+    >
+      <div className="bg-white/50 backdrop-blur-md p-20 rounded-xl shadow-lg w-full max-w-7xl">
+        <h1 className="text-center text-4xl font-bold mb-8 text-gray-800">
+          <span className="text-gray-800">SI</span>
+          <span className="font-bold" style={{ color: '#579DA5' }}>Perpus</span>
+        </h1>
+        <form className="space-y-6">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="w-full">
+              <label className="block mb-1 text-gray-700 font-semibold">First name</label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 rounded-md border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#579DA5]"
+              />
+            </div>
+            <div className="w-full">
+              <label className="block mb-1 text-gray-700 font-semibold">Last name</label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 rounded-md border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#579DA5]"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block mb-1 text-gray-700 font-semibold">Email</label>
+            <input
+              type="email"
+              className="w-full px-4 py-2 rounded-md border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#579DA5]"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-gray-700 font-semibold">Password</label>
+            <input
+              type="password"
+              className="w-full px-4 py-2 rounded-md border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#579DA5]"
+            />
+          </div>
           <button
-            type="button"
-            onClick={() => navigate("/forgot")}
-            className="text-blue-600 hover:underline"
+            type="submit"
+            className="w-full text-white py-3 rounded-md font-semibold transition duration-300"
+            style={{ backgroundColor: '#579DA5' }}
           >
-            Forgot Password?
+            Sign In
           </button>
-          <button
-            type="button"
-            onClick={() => navigate("/register")}
-            className="text-blue-600 hover:underline"
-          >
-            Register
-          </button>
-        </div>
-      </form>
+        </form>
+        <p className="text-center mt-6 text-gray-700">
+          Don’t have an account?{' '}
+          <a href="#" className="hover:underline" style={{ color: '#579DA5' }}>
+            Register here
+          </a>
+        </p>
+      </div>
     </div>
   );
-}
+};
+
+export default Login;
