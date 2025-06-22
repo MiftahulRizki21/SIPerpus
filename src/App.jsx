@@ -18,6 +18,8 @@ import Events from "./pages/admin/Events";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import Donation from './pages/guest/Donation';
+import About from './pages/guest/About';
 
 // 🔥 Tambahkan import Hero di sini
 import Hero from "./components/guest/Hero";
@@ -30,6 +32,8 @@ export default function App() {
         <Route path="/" element={<Hero />} /> {/* 👈 sekarang '/' menampilkan Hero */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/donation" element={<Donation />} />
+        <Route path="/about" element={<About />} />
       </Route>
 
       {/* Admin routes */}

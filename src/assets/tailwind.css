@@ -38,3 +38,6 @@ body {
     @apply font-barlow;
 }
 
+.about-page .header nav a.active {
+  color: #14b8a6; /* teal */
+}
