@@ -1,0 +1,602 @@
+[
+  {
+    "id": 1,
+    "title": "To Kill a Mockingbird",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 2,
+    "title": "1984",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 3,
+    "title": "Pride and Prejudice",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 4,
+    "title": "The Great Gatsby",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 5,
+    "title": "Moby Dick",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 6,
+    "title": "War and Peace",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 7,
+    "title": "The Catcher in the Rye",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 8,
+    "title": "The Lord of the Rings",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 9,
+    "title": "The Hobbit",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 10,
+    "title": "Crime and Punishment",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 11,
+    "title": "Jane Eyre",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 12,
+    "title": "Wuthering Heights",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 13,
+    "title": "Brave New World",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 14,
+    "title": "The Adventures of Huckleberry Finn",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 15,
+    "title": "Anna Karenina",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 16,
+    "title": "The Brothers Karamazov",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 17,
+    "title": "One Hundred Years of Solitude",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 18,
+    "title": "Great Expectations",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 19,
+    "title": "Little Women",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 20,
+    "title": "Fahrenheit 451",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 21,
+    "title": "The Picture of Dorian Gray",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 22,
+    "title": "Dracula",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 23,
+    "title": "Frankenstein",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 24,
+    "title": "The Odyssey",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 25,
+    "title": "The Iliad",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 26,
+    "title": "Les Mis\u00e9rables",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 27,
+    "title": "The Count of Monte Cristo",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 28,
+    "title": "Don Quixote",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 29,
+    "title": "A Tale of Two Cities",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 30,
+    "title": "The Divine Comedy",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 31,
+    "title": "Alice's Adventures in Wonderland",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 32,
+    "title": "Through the Looking-Glass",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 33,
+    "title": "The Metamorphosis",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 34,
+    "title": "Heart of Darkness",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 35,
+    "title": "The Stranger",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 36,
+    "title": "The Trial",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 37,
+    "title": "Siddhartha",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 38,
+    "title": "The Alchemist",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 39,
+    "title": "The Old Man and the Sea",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 40,
+    "title": "Of Mice and Men",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 41,
+    "title": "The Sun Also Rises",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 42,
+    "title": "Catch-22",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 43,
+    "title": "Slaughterhouse-Five",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 44,
+    "title": "Beloved",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 45,
+    "title": "The Color Purple",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 46,
+    "title": "Invisible Man",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 47,
+    "title": "Native Son",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 48,
+    "title": "Things Fall Apart",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 49,
+    "title": "The Kite Runner",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 50,
+    "title": "Life of Pi",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 51,
+    "title": "The Book Thief",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 52,
+    "title": "A Thousand Splendid Suns",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 53,
+    "title": "The Road",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 54,
+    "title": "The Giver",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 55,
+    "title": "The Hunger Games",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 56,
+    "title": "Harry Potter and the Sorcerer's Stone",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 57,
+    "title": "Harry Potter and the Chamber of Secrets",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 58,
+    "title": "Harry Potter and the Prisoner of Azkaban",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 59,
+    "title": "Harry Potter and the Goblet of Fire",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 60,
+    "title": "Harry Potter and the Order of the Phoenix",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 61,
+    "title": "Harry Potter and the Half-Blood Prince",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 62,
+    "title": "Harry Potter and the Deathly Hallows",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 63,
+    "title": "Percy Jackson & the Olympians: The Lightning Thief",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 64,
+    "title": "The Maze Runner",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 65,
+    "title": "Divergent",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 66,
+    "title": "Insurgent",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 67,
+    "title": "Allegiant",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 68,
+    "title": "Twilight",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 69,
+    "title": "New Moon",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 70,
+    "title": "Eclipse",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 71,
+    "title": "Breaking Dawn",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 72,
+    "title": "The Fault in Our Stars",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 73,
+    "title": "Looking for Alaska",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 74,
+    "title": "Paper Towns",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 75,
+    "title": "An Abundance of Katherines",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 76,
+    "title": "The Perks of Being a Wallflower",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 77,
+    "title": "Thirteen Reasons Why",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 78,
+    "title": "Gone Girl",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 79,
+    "title": "The Girl on the Train",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 80,
+    "title": "Big Little Lies",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 81,
+    "title": "The Silent Patient",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 82,
+    "title": "Verity",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 83,
+    "title": "It Ends with Us",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 84,
+    "title": "Ugly Love",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 85,
+    "title": "Reminders of Him",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 86,
+    "title": "The Midnight Library",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 87,
+    "title": "The Seven Husbands of Evelyn Hugo",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 88,
+    "title": "Daisy Jones & The Six",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 89,
+    "title": "Malibu Rising",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 90,
+    "title": "Beach Read",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 91,
+    "title": "People We Meet on Vacation",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 92,
+    "title": "Book Lovers",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 93,
+    "title": "November 9",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 94,
+    "title": "The Love Hypothesis",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 95,
+    "title": "The Spanish Love Deception",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 96,
+    "title": "Twisted Love",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 97,
+    "title": "Twisted Games",
+    "desc": "Free to borrow",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 98,
+    "title": "Twisted Hate",
+    "desc": "No charge to read",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 99,
+    "title": "Twisted Lies",
+    "desc": "Available for free",
+    "img": "/assets/book1.jpeg"
+  },
+  {
+    "id": 100,
+    "title": "To Kill a Mockingbird",
+    "desc": "Access freely",
+    "img": "/assets/book1.jpeg"
+  }
+]

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import bgPerpus from '../../assets/perpus1.jpeg'; // gambar HD
 import '../../assets/tailwind.css';
 
@@ -54,9 +55,9 @@ const Login = () => {
         </form>
         <p className="text-center mt-6 text-gray-700">
           Don’t have an account?{' '}
-          <a href="#" className="hover:underline" style={{ color: '#579DA5' }}>
+          <Link to="/register" className="hover:underline" style={{ color: '#579DA5' }}>
             Register here
-          </a>
+          </Link>
         </p>
       </div>
     </div>
