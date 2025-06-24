@@ -1,9 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import bgPerpus from '../../assets/perpus1.jpeg'; // gambar HD
+import { Link, useNavigate } from 'react-router-dom';
+import bgPerpus from '../../assets/perpus1.jpeg';
 import '../../assets/tailwind.css';
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    navigate("/anggota/beranda");
+  };
+
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
@@ -14,7 +21,7 @@ const Login = () => {
           <span className="text-gray-800">SI</span>
           <span className="font-bold" style={{ color: '#579DA5' }}>Perpus</span>
         </h1>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleLogin}>
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-full">
               <label className="block mb-1 text-gray-700 font-semibold">First name</label>
