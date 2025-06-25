@@ -4,8 +4,11 @@ import '../../assets/tailwind.css';
 const ContactUs = () => {
   return (
     <div className="contact-page">
-      <section className="hero">
-        Contact Us
+      <section
+        className="hero bg-cover bg-center text-white py-24"
+        style={{ backgroundImage: "url('/hero_bg.jpg')" }}
+      >
+        <h1 className="text-4xl font-bold text-center">Contact Us</h1>
       </section>
 
       <section className="contact-section">
