@@ -36,7 +36,7 @@ const Book = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 
           {/* Book 1 */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer">
             <img src={Book1} alt="Book 1" className="w-full h-[450px] object-cover" />
             <div className="p-5">
               <p className="text-base text-teal-600 font-semibold mb-1">Poetry | Literature</p>
@@ -46,7 +46,7 @@ const Book = () => {
           </div>
 
           {/* Book 2 */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer">
             <img src={Book2} alt="Book 2" className="w-full h-[450px] object-cover" />
             <div className="p-5">
               <p className="text-base text-teal-600 font-semibold mb-1">Fiction | Mystery</p>
@@ -56,7 +56,7 @@ const Book = () => {
           </div>
 
           {/* Book 3 */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer">
             <img src={Book3} alt="Book 3" className="w-full h-[450px] object-cover" />
             <div className="p-5">
               <p className="text-base text-teal-600 font-semibold mb-1">Non-Fiction | Architecture</p>
@@ -66,7 +66,7 @@ const Book = () => {
           </div>
 
           {/* Book 4 */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer">
             <img src={Book4} alt="Book 4" className="w-full h-[450px] object-cover" />
             <div className="p-5">
               <p className="text-base text-teal-600 font-semibold mb-1">Science | Biography</p>

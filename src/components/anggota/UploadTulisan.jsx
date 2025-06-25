@@ -57,18 +57,32 @@ const WritingHistory = () => {
 
       <div className="book-grid">
         {writings.map((book, i) => (
-          <div className="book-card" key={i}>
-            <img src={book.image} alt={book.title} />
-            <div className="book-info">
-              <strong>{book.title}</strong>
-              <p>{book.subtitle}</p>
-              <span className="status" style={{ color: statusColors[book.status], borderColor: statusColors[book.status] }}>
+          <div
+            className="book-card bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer"
+            key={i}
+          >
+            <img
+              src={book.image}
+              alt={book.title}
+              className="w-full aspect-[3/4] object-cover"
+            />
+            <div className="book-info p-4 space-y-2">
+              <strong className="text-lg text-gray-800">{book.title}</strong>
+              <p className="text-gray-600">{book.subtitle}</p>
+              <span
+                className="status inline-block px-3 py-1 text-sm font-semibold rounded-full border"
+                style={{
+                  color: statusColors[book.status],
+                  borderColor: statusColors[book.status],
+                }}
+              >
                 {book.status}
               </span>
             </div>
           </div>
         ))}
       </div>
+
 
       <div className="pagination">
         <button>{`<`}</button>
