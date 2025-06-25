@@ -1,8 +1,8 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import '../../assets/tailwind.css';
 import bookImg from '../../assets/book1.jpeg';
 
-// 100 nama buku nyata
 const realTitles = [
   "To Kill a Mockingbird", "1984", "Pride and Prejudice", "The Great Gatsby", "Moby Dick",
   "War and Peace", "The Catcher in the Rye", "The Lord of the Rings", "The Hobbit", "Crime and Punishment",
@@ -26,7 +26,8 @@ const realTitles = [
   "Twisted Love", "Twisted Games", "Twisted Hate", "Twisted Lies", "Before We Were Strangers"
 ];
 
-// Buat dummy data berdasarkan title asli
+
+// Buat dummy data
 const dummyBooks = realTitles.map((title, i) => ({
   id: i + 1,
   title,
@@ -34,15 +35,56 @@ const dummyBooks = realTitles.map((title, i) => ({
   img: bookImg
 }));
 
+// Animasi container untuk grid
+const containerVariant = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05, // Delay antar anak (kartu)
+    },
+  },
+};
+
+// Animasi untuk tiap kartu
+const cardVariant = {
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 80,
+      damping: 15,
+    },
+  },
+};
+
 const BookList = () => {
   return (
     <div className="bg-[#eef7f7] min-h-screen px-6 md:px-20 py-10">
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
+      <motion.h1
+        className="text-3xl font-bold text-center mb-8 text-gray-800"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
         📚 View All Books in <span className="text-[#579DA5]">SIPerpus</span>
-      </h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      </motion.h1>
+
+      {/* Grid Buku dengan animasi container */}
+      <motion.div
+        className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"
+        variants={containerVariant}
+        initial="hidden"
+        animate="visible"
+      >
         {dummyBooks.map((book) => (
-          <div key={book.id} className="bg-white rounded-xl shadow hover:shadow-md transition duration-300 overflow-hidden">
+          <motion.div
+            key={book.id}
+            className="bg-white rounded-xl shadow hover:shadow-md transition duration-300 overflow-hidden"
+            variants={cardVariant}
+          >
             <img src={book.img} alt={book.title} className="w-full h-40 object-cover" />
             <div className="p-3">
               <p className="font-semibold text-sm text-gray-800 truncate">{book.title}</p>
@@ -51,9 +93,9 @@ const BookList = () => {
                 Borrow Now!
               </button>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };
