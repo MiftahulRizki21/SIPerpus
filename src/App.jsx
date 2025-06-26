@@ -29,6 +29,7 @@ import Lokasi from "./components/anggota/Lokasi";
 import ProfileAnggota from "./components/anggota/Profile";
 import RiwayatBacaan from "./components/anggota/RiwayatBacaan";
 import UploadTulisan from "./components/anggota/UploadTulisan";
+import UploadForm from "./components/anggota/UploadForm";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -69,6 +70,7 @@ export default function App() {
         <Route path="/anggota/profile" element={<ProfileAnggota />} />
         <Route path="/anggota/riwayat" element={<RiwayatBacaan />} />
         <Route path="/anggota/upload" element={<UploadTulisan />} />
+        <Route path="/anggota/upload-form" element={<UploadForm />} />
       </Route>
 
       {/* Admin routes */}

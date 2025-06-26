@@ -34,10 +34,19 @@ const ReadingHistory = () => {
 
       {/* Hero Banner */}
       <div
-        className="hero-banner text-white py-12 text-center rounded-xl mb-10 max-w-screen-xl mx-auto"
+        className="hero-banner bg-[#379fa3] text-white py-12 text-center rounded-xl mb-10 max-w-screen-xl mx-auto"
       >
-        <h1 className="text-4xl font-bold">Riwayat Bacaan</h1><br />
+        <div className="flex flex-col items-center space-y-4">
+          <h1 className="text-4xl font-bold">Riwayat Bacaan</h1>
+          <button
+            onClick={() => window.location.href = "/anggota/upload-form"}
+            className="px-6 py-2 bg-white text-[#379fa3] font-semibold rounded-full shadow hover:bg-gray-100 transition"
+          >
+            Upload
+          </button>
+        </div>
       </div>
+
 
       {/* Book Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-6 md:px-28">
