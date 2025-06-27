@@ -22,8 +22,6 @@ const Profile = () => {
               <label className="block mb-1 text-gray-700 font-semibold">Nama</label>
               <input
                 type="text"
-                value="Dhea Amanda"
-                readOnly
                 className="w-full px-4 py-2 rounded-md border border-gray-400 bg-white/70 focus:outline-none"
               />
             </div>
@@ -31,8 +29,6 @@ const Profile = () => {
               <label className="block mb-1 text-gray-700 font-semibold">Email</label>
               <input
                 type="email"
-                value="dhea23ti@mahasiswa.pcr.ac.id"
-                readOnly
                 className="w-full px-4 py-2 rounded-md border border-gray-400 bg-white/70 focus:outline-none"
               />
             </div>
@@ -43,8 +39,6 @@ const Profile = () => {
             <label className="block mb-1 text-gray-700 font-semibold">Jenis Anggota</label>
             <input
               type="text"
-              value="Mahasiswa"
-              readOnly
               className="w-full px-4 py-2 rounded-md border border-gray-400 bg-white/70 focus:outline-none"
             />
           </div>
@@ -53,9 +47,7 @@ const Profile = () => {
           <div>
             <label className="block mb-1 text-gray-700 font-semibold">Login Terakhir</label>
             <textarea
-              readOnly
-              value={`18.30 WIB\nRabu, 08-06-2005`}
-              rows={2}
+
               className="w-full px-4 py-2 rounded-md border border-gray-400 bg-white/70 focus:outline-none whitespace-pre-line"
             />
           </div>
