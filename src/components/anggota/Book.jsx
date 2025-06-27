@@ -4,7 +4,7 @@ import BannerImg from '../../assets/perpustakaan.jpeg';
 import Book1 from '../../assets/book1.jpeg';
 import Book2 from '../../assets/book2.jpeg';
 import Book3 from '../../assets/book3.jpeg';
-import Book4 from '../../assets/book4.jpeg';
+import Book4 from '../../assets/Book4.jpeg';
 
 const Book = () => {
   return (
