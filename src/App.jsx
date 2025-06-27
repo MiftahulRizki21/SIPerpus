@@ -38,7 +38,6 @@ import Contact from './pages/guest/Contact';
 import Book from './pages/guest/Book';
 import BookList from './pages/guest/BookList';
 
-// 🔥 Tambahkan import Hero di sini
 import Hero from "./components/guest/Hero";
 
 export default function App() {
@@ -46,7 +45,7 @@ export default function App() {
     <Routes>
       {/* Guest routes */}
       <Route element={<GuestLayout />}>
-        <Route path="/" element={<Hero />} /> {/* 👈 sekarang '/' menampilkan Hero */}
+        <Route path="/" element={<Hero />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/donation" element={<Donation />} />
@@ -74,12 +73,12 @@ export default function App() {
       {/* Admin routes */}
       <Route element={<MainLayout />}>
         <Route path="/admin" element={<Dashboard />} />
-        <Route path="/members" element={<Members />} />
-        <Route path="/approve-posts" element={<ApprovePosts />} />
-        <Route path="/books" element={<Books />} />
-        <Route path="/articles" element={<Articles />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/events" element={<Events />} />
+        <Route path="/admin/members" element={<Members />} />
+        <Route path="/admin/approve-posts" element={<ApprovePosts />} />
+        <Route path="/admin/books" element={<Books />} />
+        <Route path="/admin/articles" element={<Articles />} />
+        <Route path="/admin/profile" element={<Profile />} />
+        <Route path="/admin/events" element={<Events />} />
       </Route>
     </Routes>
   );

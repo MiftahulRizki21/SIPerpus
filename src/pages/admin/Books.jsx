@@ -31,7 +31,6 @@ const Books = () => {
       status: 'Available',
       cover: 'https://source.unsplash.com/random/200x300/?programming,book'
     },
-    // ... other books
   ]);
 
   const [searchTerm, setSearchTerm] = useState('');

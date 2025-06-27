@@ -15,25 +15,13 @@ import {
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const navItems = [
-    { path: "/", icon: <FiHome />, text: "Dashboard" },
-    { path: "/members", icon: <FiUsers />, text: "Kelola Anggota" },
-    { path: "/approve-posts", icon: <FiFileText />, text: "Setujui Tulisan" },
-    { path: "/books", icon: <FiBook />, text: "Kelola Buku" },
-    { path: "/articles", icon: <FiEdit />, text: "Tulisan Lainnya" },
-    { path: "/profile", icon: <FiUser />, text: "Profil" },
-    { path: "/events", icon: <FiCalendar />, text: "Kelola Events" },
-    { 
-      type: "divider",
-      text: "Analytics" 
-    },
-    { path: "/reports", icon: <FiPieChart />, text: "Laporan" },
-    { path: "/statistics", icon: <FiBarChart2 />, text: "Statistik" },
-    { 
-      type: "divider",
-      text: "System" 
-    },
-    { path: "/settings", icon: <FiSettings />, text: "Pengaturan" },
-    { path: "/servers", icon: <FiServer />, text: "Server Status" },
+    { path: "/admin", icon: <FiHome />, text: "Dashboard" },
+    { path: "/admin/members", icon: <FiUsers />, text: "Kelola Anggota" },
+    { path: "/admin/approve-posts", icon: <FiFileText />, text: "Setujui Tulisan" },
+    { path: "/admin/books", icon: <FiBook />, text: "Kelola Buku" },
+    { path: "/admin/articles", icon: <FiEdit />, text: "Tulisan Lainnya" },
+    { path: "/admin/profile", icon: <FiUser />, text: "Profil" },
+    { path: "/admin/events", icon: <FiCalendar />, text: "Kelola Events" },
   ]
 
   return (
