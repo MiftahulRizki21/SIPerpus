@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { supabase } from "../../services/notesAPI";
+// import { supabase } from "../../services/notesAPI";
 import { Link } from "react-router-dom";
 
 const UploadForm = () => {
