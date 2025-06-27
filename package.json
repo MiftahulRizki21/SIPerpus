@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@parcel/css": "^1.14.0",
     "@tailwindcss/vite": "^4.1.10",
     "axios": "^1.10.0",
     "date-fns": "^4.1.0",
