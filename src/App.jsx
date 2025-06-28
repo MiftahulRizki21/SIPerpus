@@ -1,5 +1,5 @@
 // File: App.jsx
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./assets/tailwind.css";
 
@@ -9,47 +9,55 @@ import GuestLayout from "./layout/guest/GuestLayout";
 import AnggotaLayout from "./layout/anggota/AnggotaLayout";
 
 // Import Pages
-import Dashboard from "./pages/admin/Dashboard";
-import Members from "./pages/admin/Members";
-import ApprovePosts from "./pages/admin/ApprovePosts";
-import Books from "./pages/admin/Books";
-import Articles from "./pages/admin/Articles";
-import Profile from "./pages/admin/Profile";
-import Events from "./pages/admin/Events";
+const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+const Members = lazy(() => import("./pages/admin/Members"));
+const ApprovePosts = lazy(() => import("./pages/admin/ApprovePosts"));
+const Books = lazy(() => import("./pages/admin/Books"));
+const Articles = lazy(() => import("./pages/admin/Articles"));
+const Profile = lazy(() => import("./pages/admin/Profile"));
+const Events = lazy(() => import("./pages/admin/Events"));
 
-// Import Anggota
-import AboutAnggota from "./components/anggota/About";
-import Beranda from "./components/anggota/Beranda";
-import BookAnggota from "./components/anggota/Book";
-import ContactAnggota from "./components/anggota/Contact";
-import DonationAnggota from "./components/anggota/Donation";
-import LoginAnggota from "./components/anggota/Login";
-import LoginUpload from "./components/anggota/LoginUpload";
-import Lokasi from "./components/anggota/Lokasi";
-import ProfileAnggota from "./components/anggota/Profile";
-import RiwayatBacaan from "./components/anggota/RiwayatBacaan";
-import UploadTulisan from "./components/anggota/UploadTulisan";
-import UploadForm from "./components/anggota/UploadForm";
-import ReadBook from "./components/ReadBook";
-import BookListAnggota from "./components/anggota/BookList";
-import EventAnggota from './components/anggota/EventGuest';
-import EventAnggotaDetail from './components/anggota/EventDetail';
+// Anggota
+const AboutAnggota = lazy(() => import("./components/anggota/About"));
+const Beranda = lazy(() => import("./components/anggota/Beranda"));
+const BookAnggota = lazy(() => import("./components/anggota/Book"));
+const ContactAnggota = lazy(() => import("./components/anggota/Contact"));
+const DonationAnggota = lazy(() => import("./components/anggota/Donation"));
+const LoginAnggota = lazy(() => import("./components/anggota/Login"));
+const LoginUpload = lazy(() => import("./components/anggota/LoginUpload"));
+const Lokasi = lazy(() => import("./components/anggota/Lokasi"));
+const ProfileAnggota = lazy(() => import("./components/anggota/Profile"));
+const RiwayatBacaan = lazy(() => import("./components/anggota/RiwayatBacaan"));
+const UploadTulisan = lazy(() => import("./components/anggota/UploadTulisan"));
+const UploadForm = lazy(() => import("./components/anggota/UploadForm"));
+const ReadBook = lazy(() => import("./components/ReadBook"));
+const BookListAnggota = lazy(() => import("./components/anggota/BookList"));
+const EventAnggota = lazy(() => import("./components/anggota/EventGuest"));
+const EventAnggotaDetail = lazy(() => import("./components/anggota/EventDetail"));
 
+// Guest
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const Donation = lazy(() => import("./pages/guest/Donation"));
+const About = lazy(() => import("./pages/guest/About"));
+const Contact = lazy(() => import("./pages/guest/Contact"));
+const Book = lazy(() => import("./pages/guest/Book"));
+const BookList = lazy(() => import("./pages/guest/BookList"));
+const EventGuest = lazy(() => import("./pages/guest/EventGuest"));
+const EventDetail = lazy(() => import("./pages/guest/EventDetail"));
+const Hero = lazy(() => import("./components/guest/Hero"));
 
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import Donation from './pages/guest/Donation';
-import About from './pages/guest/About';
-import Contact from './pages/guest/Contact';
-import Book from './pages/guest/Book';
-import BookList from './pages/guest/BookList';
-import EventGuest from './pages/guest/EventGuest';
-import EventDetail from './pages/guest/EventDetail';
-
-import Hero from "./components/guest/Hero";
 import PrivateRoute from "./utils/PrivateRoute";
 export default function App() {
+  const LoadingScreen = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#f7fafa]">
+    <div className="animate-spin h-12 w-12 border-4 border-[#579DA5] border-t-transparent rounded-full"></div>
+    <p className="ml-4 text-[#579DA5] font-semibold">Loading...</p>
+  </div>
+);
   return (
+    <Suspense fallback={<LoadingScreen />}>
+
     <Routes>
       {/* Guest routes */}
       <Route element={<GuestLayout />}>
@@ -64,7 +72,6 @@ export default function App() {
         <Route path="/eventguest" element={<EventGuest />} />
         <Route path="/event/:id" element={<EventDetail />} />
         <Route path="/book/:id" element={<ReadBook />} />
-
       </Route>
 
       {/* Anggota routes */}
@@ -103,6 +110,7 @@ export default function App() {
           </Route>
       </Route>
     </Routes>
-      
+</Suspense>
+
   );
 }
