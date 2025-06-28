@@ -1,49 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   FiSearch, 
   FiPlus, 
   FiEdit2, 
   FiTrash2, 
   FiBookOpen,
-  FiFilter,
-  FiChevronDown,
   FiChevronLeft,
   FiChevronRight,
   FiBook,
   FiUser,
-  FiCalendar,
   FiCheckCircle,
   FiAlertCircle,
   FiMinusCircle
 } from 'react-icons/fi';
+import { supabase } from "../../services/supaBase";
 
 const Books = () => {
-  // Sample book data
-  const [books, setBooks] = useState([
-    {
-      id: 1,
-      title: 'Belajar React JS dari Dasar',
-      author: 'John Doe',
-      category: 'Pemrograman',
-      year: 2023,
-      isbn: '978-623-123-456-1',
-      stock: 15,
-      status: 'Available',
-      cover: 'https://source.unsplash.com/random/200x300/?programming,book'
-    },
-  ]);
-
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const booksPerPage = 5;
 
-  // Filter books based on search and category
+  // Fetch books from Supabase
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true);
+        let { data, error } = await supabase
+          .from('books')
+          .select('*')
+          .order('title', { ascending: true });
+
+        if (error) throw error;
+        setBooks(data || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  // Filter books based on search
   const filteredBooks = books.filter(book => 
-    (book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     book.isbn.includes(searchTerm)) &&
-    (selectedCategory === 'all' || book.category === selectedCategory)
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.kbn.includes(searchTerm) ||
+    book.publisher?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Pagination
@@ -53,20 +60,58 @@ const Books = () => {
   );
   const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
 
-  const deleteBook = (id) => {
+  // Delete book from Supabase
+  const deleteBook = async (id) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus buku ini?')) {
-      setBooks(books.filter(book => book.id !== id));
+      try {
+        const { error } = await supabase
+          .from('books')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+        
+        setBooks(books.filter(book => book.id !== id));
+      } catch (err) {
+        setError(err.message);
+      }
     }
   };
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'Available': return { bg: 'bg-[#e6f7f9]', text: 'text-[#1a6d7a]', icon: <FiCheckCircle className="text-[#579DA5]" /> };
-      case 'Limited': return { bg: 'bg-[#fff8e6]', text: 'text-[#8a6d3b]', icon: <FiAlertCircle className="text-[#ffc107]" /> };
-      case 'Out of Stock': return { bg: 'bg-[#fde8e8]', text: 'text-[#a94442]', icon: <FiMinusCircle className="text-[#dc3545]" /> };
-      default: return { bg: 'bg-gray-50', text: 'text-gray-800', icon: null };
+  const getStatusColor = (available_copies) => {
+    if (available_copies > 10) {
+      return { bg: 'bg-[#e6f7f9]', text: 'text-[#1a6d7a]', icon: <FiCheckCircle className="text-[#579DA5]" />, label: 'Tersedia' };
+    } else if (available_copies > 0) {
+      return { bg: 'bg-[#fff8e6]', text: 'text-[#8a6d3b]', icon: <FiAlertCircle className="text-[#ffc107]" />, label: 'Terbatas' };
+    } else {
+      return { bg: 'bg-[#fde8e8]', text: 'text-[#a94442]', icon: <FiMinusCircle className="text-[#dc3545]" />, label: 'Habis' };
     }
   };
+
+  const getUploadStatusColor = (status) => {
+    switch(status) {
+      case 'completed': return { bg: 'bg-green-50', text: 'text-green-800', label: 'Selesai' };
+      case 'processing': return { bg: 'bg-blue-50', text: 'text-blue-800', label: 'Proses' };
+      case 'failed': return { bg: 'bg-red-50', text: 'text-red-800', label: 'Gagal' };
+      default: return { bg: 'bg-gray-50', text: 'text-gray-800', label: 'Unknown' };
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-6 flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#579DA5]"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 bg-red-50 text-red-800 rounded-lg">
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -88,7 +133,7 @@ const Books = () => {
             </div>
             <input
               type="text"
-              placeholder="Cari judul, penulis, atau ISBN..."
+              placeholder="Cari judul, penulis, kbn, atau penerbit..."
               className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-[#579DA5] focus:border-[#579DA5] w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -106,29 +151,40 @@ const Books = () => {
         {currentBooks.length > 0 ? (
           <div className="divide-y divide-gray-200">
             {currentBooks.map((book) => {
-              const statusColor = getStatusColor(book.status);
+              const availability = getStatusColor(book.available_copies);
+              const uploadStatus = getUploadStatusColor(book.upload_status);
               return (
                 <div key={book.id} className="p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center gap-4">
-                    <img 
-                      src={book.cover} 
-                      alt={book.title}
-                      className="h-24 w-16 object-cover rounded-md shadow-sm border border-gray-200"
-                    />
+                    <div className="h-24 w-16 flex items-center justify-center bg-gray-100 rounded-md shadow-sm border border-gray-200">
+                      <img src={book.image_url} alt={book.title} className="w-full h-full object-cover" />
+                    </div>
                     <div className="flex-1">
                       <h3 className="text-lg font-medium text-gray-800">{book.title}</h3>
                       <div className="flex flex-wrap items-center gap-4 mt-2">
                         <span className="text-sm text-gray-500 flex items-center">
                           <FiUser className="mr-1" /> {book.author}
                         </span>
-                        <span className="text-sm text-gray-500">{book.category}</span>
-                        <span className="text-sm text-gray-500">{book.year}</span>
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${statusColor.bg} ${statusColor.text}`}>
-                          {statusColor.icon}
-                          {book.status === 'Available' ? 'Tersedia' : 
-                           book.status === 'Limited' ? 'Terbatas' : 'Habis'}
+                        {book.publisher && (
+                          <span className="text-sm text-gray-500">{book.publisher}</span>
+                        )}
+                        {book.year && (
+                          <span className="text-sm text-gray-500">{book.year}</span>
+                        )}
+                        <span className="text-sm text-gray-500">{book.kbn}</span>
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${availability.bg} ${availability.text}`}>
+                          {availability.icon}
+                          {availability.label} ({book.available_copies})
                         </span>
+                        {book.upload_status && (
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${uploadStatus.bg} ${uploadStatus.text}`}>
+                            {uploadStatus.label}
+                          </span>
+                        )}
                       </div>
+                      {book.description && (
+                        <p className="text-sm text-gray-500 mt-2 line-clamp-1">{book.description}</p>
+                      )}
                     </div>
                     <div className="flex gap-2">
                       <button className="p-2 text-gray-500 hover:text-[#579DA5] hover:bg-[#e6f7f9] rounded-full transition-colors">
@@ -155,8 +211,8 @@ const Books = () => {
               Tidak ada buku yang ditemukan
             </h3>
             <p className="text-gray-500">
-              {searchTerm || selectedCategory !== 'all' 
-                ? 'Coba ubah pencarian atau filter Anda' 
+              {searchTerm 
+                ? 'Coba ubah pencarian Anda' 
                 : 'Belum ada buku yang terdaftar'}
             </p>
           </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   FiSearch, 
   FiPlus, 
@@ -16,74 +16,82 @@ import {
   FiXCircle
 } from 'react-icons/fi'
 import { format, parseISO, isBefore, isAfter } from 'date-fns'
+import { supabase } from "../../services/supaBase";
 
 const Events = () => {
-  // Enhanced event data
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: 'Workshop Pengembangan Web Modern',
-      description: 'Pelajari teknik terbaru dalam pengembangan web dengan framework modern',
-      date: '2023-06-15',
-      time: '09:00 - 12:00',
-      location: 'Ruang Seminar A, Gedung Teknik',
-      category: 'Workshop',
-      status: 'Upcoming',
-      participants: 45,
-      maxParticipants: 60,
-      image: 'https://source.unsplash.com/random/400x200/?workshop'
-    },
-    {
-      id: 2,
-      title: 'Seminar Kecerdasan Buatan',
-      description: 'Diskusi tentang perkembangan terbaru di bidang AI dan machine learning',
-      date: '2023-06-20',
-      time: '13:00 - 15:30',
-      location: 'Auditorium Pusat',
-      category: 'Seminar',
-      status: 'Upcoming',
-      participants: 120,
-      maxParticipants: 150,
-      image: 'https://source.unsplash.com/random/400x200/?seminar'
-    },
-    {
-      id: 3,
-      title: 'Pelatihan Dasar-Dasar React',
-      description: 'Pelatihan intensif untuk pemula yang ingin mempelajari React',
-      date: '2023-05-30',
-      time: '10:00 - 16:00',
-      location: 'Lab Komputer 3',
-      category: 'Pelatihan',
-      status: 'Completed',
-      participants: 25,
-      maxParticipants: 30,
-      image: 'https://source.unsplash.com/random/400x200/?training'
-    }
-  ])
-
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [filterStatus, setFilterStatus] = useState('all')
-  const [filterCategory, setFilterCategory] = useState('all')
   const eventsPerPage = 5
+
+  // Fetch events from Supabase
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true)
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .order('start_time', { ascending: true })
+
+        if (error) throw error
+        
+        // Transform the data to match our UI structure
+        const transformedEvents = data.map(event => ({
+          id: event.id,
+          title: event.title,
+          description: event.description,
+          location: event.location,
+          start_time: event.start_time,
+          end_time: event.end_time,
+          created_by: event.created_by,
+          // Add derived fields for UI
+          date: event.start_time.split('T')[0],
+          time: `${format(parseISO(event.start_time), 'HH:mm')} - ${format(parseISO(event.end_time), 'HH:mm')}`,
+          status: getEventStatus(event.start_time, event.end_time),
+          participants: Math.floor(Math.random() * 100), // Random for demo - replace with actual data if available
+          maxParticipants: 100, // Default value - replace with actual data if available
+          image: getEventImage(event.title) // Helper function to get relevant image
+        }))
+        
+        setEvents(transformedEvents)
+      } catch (error) {
+        console.error('Error fetching events:', error.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchEvents()
+  }, [])
+
+  // Helper function to determine event status
+  const getEventStatus = (startTime, endTime) => {
+    const now = new Date()
+    const start = new Date(startTime)
+    const end = new Date(endTime)
+    
+    if (isBefore(end, now)) return 'Completed'
+    if (isAfter(start, now)) return 'Upcoming'
+    return 'Ongoing'
+  }
+
+  // Helper function to get event image based on title
+  const getEventImage = (title) => {
+    const keywords = ['workshop', 'seminar', 'training', 'conference', 'meeting']
+    const match = keywords.find(keyword => title.toLowerCase().includes(keyword))
+    return `https://source.unsplash.com/random/400x200/?${match || 'event'}`
+  }
 
   // Update event status based on current date
   const updatedEvents = events.map(event => {
-    const eventDate = parseISO(event.date)
-    const now = new Date()
-    
-    let status = event.status
-    if (isBefore(eventDate, now)) {
-      status = 'Completed'
-    } else if (isAfter(eventDate, now)) {
-      status = 'Upcoming'
+    return { 
+      ...event,
+      status: getEventStatus(event.start_time, event.end_time)
     }
-
-    return { ...event, status }
   })
-
-  // Get all unique categories
-  const categories = ['all', ...new Set(events.map(event => event.category))]
 
   // Filter events
   const filteredEvents = updatedEvents.filter(event => {
@@ -96,11 +104,7 @@ const Events = () => {
       filterStatus === 'all' || 
       event.status.toLowerCase() === filterStatus.toLowerCase()
     
-    const matchesCategory =
-      filterCategory === 'all' ||
-      event.category === filterCategory
-    
-    return matchesSearch && matchesStatus && matchesCategory
+    return matchesSearch && matchesStatus
   })
 
   // Pagination logic
@@ -110,9 +114,21 @@ const Events = () => {
   const totalPages = Math.ceil(filteredEvents.length / eventsPerPage)
 
   // Delete event
-  const deleteEvent = (id) => {
+  const deleteEvent = async (id) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus event ini?')) {
-      setEvents(events.filter(event => event.id !== id))
+      try {
+        const { error } = await supabase
+          .from('events')
+          .delete()
+          .eq('id', id)
+
+        if (error) throw error
+
+        setEvents(events.filter(event => event.id !== id))
+      } catch (error) {
+        console.error('Error deleting event:', error.message)
+        alert('Gagal menghapus event')
+      }
     }
   }
 
@@ -159,7 +175,15 @@ const Events = () => {
 
   // View event details
   const viewEventDetails = (event) => {
-    alert(`Detail Event:\n\nJudul: ${event.title}\nDeskripsi: ${event.description}\nTanggal: ${formatDate(event.date)}\nWaktu: ${event.time}\nLokasi: ${event.location}\nKategori: ${event.category}\nStatus: ${event.status}\nPeserta: ${event.participants}/${event.maxParticipants}`)
+    alert(`Detail Event:\n\nJudul: ${event.title}\nDeskripsi: ${event.description}\nTanggal: ${formatDate(event.start_time)}\nWaktu: ${event.time}\nLokasi: ${event.location}\nStatus: ${event.status}\nPeserta: ${event.participants}/${event.maxParticipants}`)
+  }
+
+  if (loading) {
+    return (
+      <div className="p-6 flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#579DA5]"></div>
+      </div>
+    )
   }
 
   return (
@@ -265,17 +289,6 @@ const Events = () => {
               <option value="upcoming">Mendatang</option>
               <option value="ongoing">Berlangsung</option>
               <option value="completed">Selesai</option>
-              <option value="cancelled">Dibatalkan</option>
-            </select>
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-[#579DA5] focus:border-[#579DA5]"
-            >
-              <option value="all">Semua Kategori</option>
-              {categories.filter(c => c !== 'all').map(category => (
-                <option key={category} value={category}>{category}</option>
-              ))}
             </select>
           </div>
         </div>
@@ -318,8 +331,7 @@ const Events = () => {
                         <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${statusColor.bg} ${statusColor.text}`}>
                           {statusColor.icon}
                           {event.status === 'Upcoming' ? 'Mendatang' : 
-                           event.status === 'Completed' ? 'Selesai' : 
-                           event.status === 'Cancelled' ? 'Dibatalkan' : 'Berlangsung'}
+                           event.status === 'Completed' ? 'Selesai' : 'Berlangsung'}
                         </div>
                       </div>
                       <p className="text-sm text-gray-500 mt-1">{event.description}</p>
@@ -327,7 +339,7 @@ const Events = () => {
                       <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="text-sm text-gray-500 flex items-center">
                           <FiCalendar className="mr-2 text-gray-400" />
-                          {formatDate(event.date)}
+                          {formatDate(event.start_time)}
                         </div>
                         <div className="text-sm text-gray-500 flex items-center">
                           <FiClock className="mr-2 text-gray-400" />
@@ -378,7 +390,7 @@ const Events = () => {
               Tidak ada event yang ditemukan
             </h3>
             <p className="text-gray-500">
-              {searchTerm || filterStatus !== 'all' || filterCategory !== 'all'
+              {searchTerm || filterStatus !== 'all'
                 ? 'Coba ubah pencarian atau filter Anda'
                 : 'Belum ada event yang terdaftar'}
             </p>

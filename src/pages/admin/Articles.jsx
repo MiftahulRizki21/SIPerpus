@@ -1,4 +1,6 @@
-import { useState } from 'react'
+// components/Articles.jsx
+import { useState, useEffect } from 'react'
+import { supabase } from "../../services/supaBase";
 import {
   FiEdit2,
   FiTrash2,
@@ -7,7 +9,6 @@ import {
   FiFileText,
   FiUser,
   FiCalendar,
-  FiTag,
   FiCheckCircle,
   FiClock,
   FiChevronDown,
@@ -16,85 +17,68 @@ import {
 } from 'react-icons/fi'
 
 const Articles = () => {
-  // Sample article data with more details
-  const [articles, setArticles] = useState([
-    {
-      id: 1,
-      title: 'Panduan Lengkap Belajar React',
-      author: 'John Doe',
-      category: 'Teknologi',
-      date: '2023-05-10',
-      status: 'Published',
-      views: 1245,
-      likes: 89,
-      content: 'Artikel ini membahas dasar-dasar React untuk pemula...'
-    },
-    {
-      id: 2,
-      title: 'Sejarah Perkembangan JavaScript',
-      author: 'Jane Smith',
-      category: 'Teknologi',
-      date: '2023-05-15',
-      status: 'Draft',
-      views: 0,
-      likes: 0,
-      content: 'Perjalanan JavaScript dari masa ke masa...'
-    },
-    {
-      id: 3,
-      title: 'Tips Menulis Artikel yang Menarik',
-      author: 'Bob Johnson',
-      category: 'Menulis',
-      date: '2023-05-20',
-      status: 'Published',
-      views: 876,
-      likes: 45,
-      content: 'Teknik-teknik menulis artikel yang menarik pembaca...'
-    },
-    {
-      id: 4,
-      title: 'Pengenalan Machine Learning',
-      author: 'Alice Brown',
-      category: 'Data Science',
-      date: '2023-05-25',
-      status: 'Published',
-      views: 1532,
-      likes: 124,
-      content: 'Dasar-dasar machine learning untuk pemula...'
-    }
-  ])
-
+  const [articles, setArticles] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [selectedCategory, setSelectedCategory] = useState('all')
   const articlesPerPage = 5
 
-  // Get all unique categories
-  const categories = ['all', ...new Set(articles.map(article => article.category))]
+  // Fetch articles dari Supabase
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true)
+        const { data, error } = await supabase
+          .from('writings')
+          .select('*')
+          .order('created_at', { ascending: false })
 
-  // Filter articles based on search and category
-  const filteredArticles = articles.filter(article =>
-    (article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.author.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedCategory === 'all' || article.category === selectedCategory)
-  )
+        if (error) throw error
+        setArticles(data || [])
+      } catch (err) {
+        setError(err.message)
+        console.error('Error fetching articles:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  // Correct pagination logic
-  const currentArticles = filteredArticles.slice(
-    (currentPage - 1) * articlesPerPage,
-    currentPage * articlesPerPage
-  )
+    fetchArticles()
+  }, [])
 
-  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage)
-
-  const deleteArticle = (id) => {
+  // Delete article dari Supabase
+  const deleteArticle = async (id) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus artikel ini?')) {
-      setArticles(articles.filter(article => article.id !== id))
+      try {
+        const { error } = await supabase
+          .from('writings')
+          .delete()
+          .eq('id', id)
+
+        if (error) throw error
+        // Update state setelah delete
+        setArticles(articles.filter(article => article.id !== id))
+      } catch (err) {
+        setError(err.message)
+        console.error('Error deleting article:', err)
+      }
     }
   }
 
   const viewArticleDetails = (article) => {
-    alert(`Detail Artikel:\n\nJudul: ${article.title}\nPenulis: ${article.author}\nStatus: ${article.status}\nKategori: ${article.category}\nTanggal: ${article.date}\n\nDilihat: ${article.views}x\nSuka: ${article.likes}\n\nKonten:\n${article.content}`)
+    alert(`Detail Artikel:\n\nJudul: ${article.title}\nID Pengguna: ${article.user_id}\nStatus: ${article.status}\nTanggal Dibuat: ${formatDate(article.created_at)}\n\nKonten:\n${article.content}`)
+  }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
 
   const getStatusColor = (status) => {
@@ -105,8 +89,35 @@ const Articles = () => {
     }
   }
 
+  // Filter articles berdasarkan pencarian
+  const filteredArticles = articles.filter(article =>
+    article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    article.content.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  // Pagination logic
+  const currentArticles = filteredArticles.slice(
+    (currentPage - 1) * articlesPerPage,
+    currentPage * articlesPerPage
+  )
+
+  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage)
+
+  if (loading) return (
+    <div className="p-6 flex justify-center items-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#579DA5]"></div>
+    </div>
+  )
+
+  if (error) return (
+    <div className="p-6 text-red-600">
+      Error: {error}
+    </div>
+  )
+
   return (
     <div className="p-6">
+      {/* Header dan Search */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-lg bg-[#e6f7f9] text-[#579DA5]">
@@ -124,29 +135,19 @@ const Articles = () => {
             </div>
             <input
               type="text"
-              placeholder="Cari judul atau penulis..."
+              placeholder="Cari judul atau konten..."
               className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-[#579DA5] focus:border-[#579DA5] w-full"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+                setCurrentPage(1)
+              }}
             />
           </div>
-          <div className="relative">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="appearance-none pl-3 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-[#579DA5] focus:border-[#579DA5] bg-white"
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category === 'all' ? 'Semua Kategori' : category}
-                </option>
-              ))}
-            </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <FiChevronDown className="text-gray-400" />
-            </div>
-          </div>
-          <button className="flex items-center justify-center px-4 py-2 bg-[#579DA5] text-white rounded-lg hover:bg-[#4a8b92] transition-colors">
+          <button 
+            className="flex items-center justify-center px-4 py-2 bg-[#579DA5] text-white rounded-lg hover:bg-[#4a8b92] transition-colors"
+            onClick={() => alert('Fitur tambah artikel akan dibuka')}
+          >
             <FiPlus className="mr-2" />
             Tambah Artikel
           </button>
@@ -154,7 +155,7 @@ const Articles = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -192,19 +193,6 @@ const Articles = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Total Dilihat</p>
-              <p className="text-2xl font-semibold text-[#6f42c1]">
-                {articles.reduce((sum, article) => sum + article.views, 0)}
-              </p>
-            </div>
-            <div className="p-3 rounded-full bg-[#f0e6ff] text-[#6f42c1]">
-              <FiUser size={20} />
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Articles List */}
@@ -215,11 +203,28 @@ const Articles = () => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-500">Urutkan:</span>
-            <select className="text-sm border-0 focus:ring-[#579DA5] focus:border-[#579DA5]">
+            <select 
+              className="text-sm border-0 focus:ring-[#579DA5] focus:border-[#579DA5]"
+              onChange={async (e) => {
+                const order = e.target.value === 'Terlama' ? { ascending: true } : { ascending: false }
+                try {
+                  setLoading(true)
+                  const { data, error } = await supabase
+                    .from('writings')
+                    .select('*')
+                    .order('created_at', order)
+
+                  if (error) throw error
+                  setArticles(data || [])
+                } catch (err) {
+                  setError(err.message)
+                } finally {
+                  setLoading(false)
+                }
+              }}
+            >
               <option>Terbaru</option>
               <option>Terlama</option>
-              <option>Paling Banyak Dilihat</option>
-              <option>Judul (A-Z)</option>
             </select>
           </div>
         </div>
@@ -235,16 +240,10 @@ const Articles = () => {
                       <h3 className="text-lg font-medium text-gray-800">{article.title}</h3>
                       <div className="flex flex-wrap items-center gap-4 mt-2">
                         <span className="text-sm text-gray-500 flex items-center">
-                          <FiUser className="mr-1" /> {article.author}
+                          <FiUser className="mr-1" /> User ID: {article.user_id}
                         </span>
                         <span className="text-sm text-gray-500 flex items-center">
-                          <FiTag className="mr-1" /> {article.category}
-                        </span>
-                        <span className="text-sm text-gray-500 flex items-center">
-                          <FiCalendar className="mr-1" /> {article.date}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          Dilihat: <span className="font-medium">{article.views}x</span>
+                          <FiCalendar className="mr-1" /> {formatDate(article.created_at)}
                         </span>
                       </div>
                     </div>
@@ -264,6 +263,7 @@ const Articles = () => {
                         <button
                           className="p-2 text-gray-500 hover:text-[#579DA5] hover:bg-[#e6f7f9] rounded-full transition-colors"
                           title="Edit"
+                          onClick={() => alert(`Edit artikel ${article.id} akan dibuka`)}
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -287,19 +287,16 @@ const Articles = () => {
               <FiFileText className="w-full h-full" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-1">
-              Tidak ada artikel yang ditemukan
+              {searchTerm ? 'Tidak ada artikel yang ditemukan' : 'Belum ada artikel yang terdaftar'}
             </h3>
             <p className="text-gray-500 mb-4">
-              {searchTerm || selectedCategory !== 'all'
-                ? 'Coba ubah pencarian atau filter Anda'
-                : 'Belum ada artikel yang terdaftar'}
+              {searchTerm
+                ? 'Coba ubah pencarian Anda'
+                : 'Klik tombol "Tambah Artikel" untuk membuat artikel baru'}
             </p>
-            {(searchTerm || selectedCategory !== 'all') && (
+            {searchTerm && (
               <button
-                onClick={() => {
-                  setSearchTerm('')
-                  setSelectedCategory('all')
-                }}
+                onClick={() => setSearchTerm('')}
                 className="text-[#579DA5] hover:text-[#4a8b92] font-medium text-sm"
               >
                 Reset pencarian
