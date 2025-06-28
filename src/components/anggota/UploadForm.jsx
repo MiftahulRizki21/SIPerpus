@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-// import { supabase } from "../../services/notesAPI";
 import { Link } from "react-router-dom";
+// import { supabase } from "../../services/notesAPI";
 
 const UploadForm = () => {
   const [selectedOption, setSelectedOption] = useState("");
@@ -10,12 +10,13 @@ const UploadForm = () => {
   const [message, setMessage] = useState("");
 
   const handleOptionChange = (e) => {
-    setFade("opacity-0");
+    setFade("opacity-0 translate-y-5");
     setTimeout(() => {
       setSelectedOption(e.target.value);
       setForm({});
       setFile(null);
-      setFade("opacity-100");
+      setFade("opacity-100 translate-y-0");
+      setMessage("");
     }, 200);
   };
 
@@ -30,73 +31,66 @@ const UploadForm = () => {
 
   const handleBukuSubmit = async (e) => {
     e.preventDefault();
-    setMessage("Mengunggah...");
+    setMessage("Mengunggah Buku...");
 
     try {
-      if (!file) return setMessage("File belum dipilih.");
-
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `buku/${fileName}`;
-
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("buku")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrlData } = supabase
-        .storage
-        .from("buku")
-        .getPublicUrl(filePath);
-
-      const { error: insertError } = await supabase
-        .from("books")
-        .insert([
-          {
-            title: form.title,
-            author: form.author,
-            publisher: form.publisher,
-            year: parseInt(form.year),
-            isbn: form.isbn,
-            description: form.description,
-            available_copies: parseInt(form.available_copies),
-            file_path: filePath,
-            file_url: publicUrlData.publicUrl,
-            uploaded_by: "user-uuid-di-sini", // ganti dengan ID user yang login
-            upload_status: "pending",
-          }
-        ]);
-
-      if (insertError) throw insertError;
-
-      setMessage("✅ Buku berhasil diunggah!");
+      console.log("Form Buku:", form);
+      console.log("File:", file);
+      // Dummy Upload
+      setTimeout(() => {
+        setMessage("✅ Buku berhasil diunggah! (dummy)");
+      }, 1000);
     } catch (err) {
       console.error(err);
       setMessage("❌ Gagal mengunggah buku.");
     }
   };
 
+  const handleEventSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("Mengunggah Event...");
+
+    try {
+      console.log("Form Event:", form);
+      console.log("File:", file);
+      // Dummy Upload
+      setTimeout(() => {
+        setMessage("✅ Event berhasil diunggah! (dummy)");
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      setMessage("❌ Gagal mengunggah event.");
+    }
+  };
+
   return (
     <div className="upload-page max-w-4xl mx-auto p-8 bg-gray-50 rounded-xl shadow-md mt-10">
-      <Link to="/anggota/riwayat" className="text-[#579DA5] hover:text-[#478c94] text-2xl">←</Link>
+      {/* Tombol Kembali */}
+      <Link to="/anggota/riwayat" className="text-[#579DA5] hover:text-[#478c94] text-2xl mb-4 inline-block">←</Link>
+
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-700">Upload Data</h1>
 
-      {/* Pilih Tipe Upload */}
-      <div className="mb-8 flex justify-center space-x-8">
-        <label className="flex items-center space-x-2">
-          <input type="radio" name="uploadType" value="buku" onChange={handleOptionChange} />
-          <span className="font-semibold">Buku / Tulisan</span>
-        </label>
-        <label className="flex items-center space-x-2">
-          <input type="radio" name="uploadType" value="event" onChange={handleOptionChange} />
-          <span className="font-semibold">Event</span>
-        </label>
+      {/* Pilihan Tipe Upload */}
+      <div className="mb-8 flex justify-center space-x-8 animate-fadeIn">
+        {["buku", "event"].map((type) => (
+          <label
+            key={type}
+            className={`flex items-center space-x-2 px-4 py-2 rounded cursor-pointer border transition ${
+              selectedOption === type ? "bg-[#E0F7FA] border-[#579DA5]" : "border-gray-300"
+            }`}
+          >
+            <input type="radio" name="uploadType" value={type} onChange={handleOptionChange} />
+            <span className="font-semibold capitalize">{type === "buku" ? "Buku / Tulisan" : "Event"}</span>
+          </label>
+        ))}
       </div>
 
       {/* Form Buku */}
       {selectedOption === "buku" && (
-        <form onSubmit={handleBukuSubmit} className={`transition-opacity duration-300 ${fade}`}>
+        <form
+          onSubmit={handleBukuSubmit}
+          className={`bg-white p-6 rounded-xl shadow transition-all duration-500 ease-in-out transform ${fade}`}
+        >
           <div className="space-y-4">
             <div>
               <label className="block font-semibold">Upload File</label>
@@ -108,21 +102,89 @@ const UploadForm = () => {
                 {field === "description" ? (
                   <textarea name={field} onChange={handleChange} className="w-full border rounded px-3 py-2" />
                 ) : (
-                  <input type={field === "year" || field === "available_copies" ? "number" : "text"} name={field} onChange={handleChange} className="w-full border rounded px-3 py-2" />
+                  <input
+                    type={field === "year" || field === "available_copies" ? "number" : "text"}
+                    name={field}
+                    onChange={handleChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
                 )}
               </div>
             ))}
             <div>
               <label className="block font-semibold">Uploaded By</label>
-              <input type="text" value="Dhea Amanda" readOnly className="w-full border rounded px-3 py-2 bg-gray-100" />
+              <input
+                type="text"
+                value="Dhea Amanda"
+                readOnly
+                className="w-full border rounded px-3 py-2 bg-gray-100"
+              />
             </div>
-            <button type="submit" className="bg-[#579DA5] text-white px-6 py-2 rounded hover:bg-[#478c94] transition">
-              Upload Buku
+            <button
+              type="submit"
+              disabled={message.includes("Mengunggah")}
+              className={`w-full text-white px-6 py-2 rounded transition ${
+                message.includes("Mengunggah") ? "bg-gray-400 cursor-not-allowed" : "bg-[#579DA5] hover:bg-[#478c94]"
+              }`}
+            >
+              {message.includes("Mengunggah") ? "Mengunggah..." : "Upload Buku"}
             </button>
-            {message && <p className="text-center mt-4 text-sm text-gray-600">{message}</p>}
           </div>
         </form>
       )}
+
+      {/* Form Event */}
+      {selectedOption === "event" && (
+        <form
+          onSubmit={handleEventSubmit}
+          className={`bg-white p-6 rounded-xl shadow transition-all duration-500 ease-in-out transform ${fade}`}
+        >
+          <div className="space-y-4">
+            <div>
+              <label className="block font-semibold">Event Image</label>
+              <input type="file" onChange={handleFileChange} className="w-full border rounded px-3 py-2" />
+            </div>
+            {["title", "description", "location", "start_time", "end_time"].map((field) => (
+              <div key={field}>
+                <label className="block font-semibold capitalize">{field.replace("_", " ")}</label>
+                {field === "description" ? (
+                  <textarea name={field} onChange={handleChange} className="w-full border rounded px-3 py-2" />
+                ) : field.includes("time") ? (
+                  <input
+                    type="datetime-local"
+                    name={field}
+                    onChange={handleChange}
+                    className="w-full border rounded px-3 py-2"
+                  />
+                ) : (
+                  <input type="text" name={field} onChange={handleChange} className="w-full border rounded px-3 py-2" />
+                )}
+              </div>
+            ))}
+            <div>
+              <label className="block font-semibold">Created By</label>
+              <input
+                type="text"
+                value="Dhea Amanda"
+                readOnly
+                className="w-full border rounded px-3 py-2 bg-gray-100"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={message.includes("Mengunggah")}
+              className={`w-full text-white px-6 py-2 rounded transition ${
+                message.includes("Mengunggah") ? "bg-gray-400 cursor-not-allowed" : "bg-[#579DA5] hover:bg-[#478c94]"
+              }`}
+            >
+              {message.includes("Mengunggah") ? "Mengunggah..." : "Upload Event"}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Pesan Upload */}
+      {message && <p className="text-center mt-4 text-sm text-gray-600">{message}</p>}
     </div>
   );
 };
