@@ -30,6 +30,11 @@ import ProfileAnggota from "./components/anggota/Profile";
 import RiwayatBacaan from "./components/anggota/RiwayatBacaan";
 import UploadTulisan from "./components/anggota/UploadTulisan";
 import UploadForm from "./components/anggota/UploadForm";
+import ReadBook from "./components/ReadBook";
+import BookListAnggota from "./components/anggota/BookList";
+import EventAnggota from './components/anggota/EventGuest';
+import EventAnggotaDetail from './components/anggota/EventDetail';
+
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -40,7 +45,6 @@ import Book from './pages/guest/Book';
 import BookList from './pages/guest/BookList';
 import EventGuest from './pages/guest/EventGuest';
 import EventDetail from './pages/guest/EventDetail';
-
 
 import Hero from "./components/guest/Hero";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -59,6 +63,7 @@ export default function App() {
         <Route path="/books/all" element={<BookList />} />
         <Route path="/eventguest" element={<EventGuest />} />
         <Route path="/event/:id" element={<EventDetail />} />
+        <Route path="/book/:id" element={<ReadBook />} />
 
       </Route>
 
@@ -68,6 +73,7 @@ export default function App() {
           <Route path="/anggota/about" element={<AboutAnggota />} />
           <Route path="/anggota/beranda" element={<Beranda />} />
           <Route path="/anggota/book" element={<BookAnggota />} />
+          <Route path="/anggota/books/all" element={<BookListAnggota />} />
           <Route path="/anggota/contact" element={<ContactAnggota />} />
           <Route path="/anggota/donation" element={<DonationAnggota />} />
           <Route path="/anggota/login" element={<LoginAnggota />} />
@@ -77,6 +83,9 @@ export default function App() {
           <Route path="/anggota/riwayat" element={<RiwayatBacaan />} />
           <Route path="/anggota/upload" element={<UploadTulisan />} />
           <Route path="/anggota/upload-form" element={<UploadForm />} />
+          <Route path="/anggota/book/:id" element={<ReadBook />} />
+          <Route path="/anggota/event" element={<EventAnggota />} />
+          <Route path="/anggota/event/:id" element={<EventAnggotaDetail />} />
         </Route>
       </Route>
       

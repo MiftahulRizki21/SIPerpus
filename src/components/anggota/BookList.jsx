@@ -105,7 +105,7 @@ const BookList = () => {
               <div className="p-3">
                 <p className="font-semibold text-sm text-gray-800 truncate">{book.title}</p>
                 <Link
-                  to={`/book/${book.id}`}
+                  to={`/anggota/book/${book.id}`}
                   className="inline-block mt-2 px-4 py-2 bg-[#579DA5] text-white rounded hover:bg-[#478c94]"
                 >
                   Baca Buku

@@ -1,36 +1,81 @@
-import React from 'react';
-import Book1 from '../assets/book1.jpeg';
-import Book2 from '../assets/book2.jpeg';
-import Book3 from '../assets/book3.jpeg';
-import Book4 from '../assets/Book4.jpeg';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-
-const featuredBooks = Array.from({ length: 8 }, (_, i) => {
-  const imgs = [Book1, Book2, Book3, Book4];
-  return imgs[i % 4];
-});
-
+import '../assets/tailwind.css';
+import { supabase } from '../services/supaBase';
+import { Link } from 'react-router-dom';
 const FeaturedBooks = () => {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('books')
+        .select('*')
+        .eq('upload_status', 'approved')
+        .limit(20);
+
+      if (error) {
+        console.error('Error fetching books:', error);
+        setBooks([]);
+      } else {
+        const shuffled = data.sort(() => 0.5 - Math.random());
+        setBooks(shuffled.slice(0, 4));
+      }
+      setLoading(false);
+    };
+    fetchBooks();
+  }, []);
+
+  const cardVariant = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 80,
+        damping: 15,
+      },
+    },
+  };
+
+  if (loading) {
+    return <p className="text-center text-gray-600">Loading books...</p>;
+  }
+
+  if (books.length === 0) {
+    return <p className="text-center text-gray-600">Tidak ada buku yang tersedia.</p>;
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-10">
-      {featuredBooks.map((img, index) => (
+    <motion.div
+      className="grid grid-cols-1 md:grid-cols-4 gap-8"
+      initial="hidden"
+      animate="visible"
+      variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
+    >
+      {books.map((book) => (
         <motion.div
-          key={index}
-          className="bg-white rounded-xl shadow-md overflow-hidden"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: index * 0.2 }}
-          viewport={{ once: true }}
+          key={book.id}
+          className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer"
+          variants={cardVariant}
         >
-          <img src={img} alt={`Book ${index + 1}`} className="w-full h-[450px] object-cover" />
+          <img src={book.image_url} alt={book.title} className="w-full h-[450px] object-cover" />
           <div className="p-5">
-            <p className="text-base text-teal-600 font-semibold mb-1">Category | Genre</p>
-            <p className="text-gray-700 text-sm mb-2">Free Borrowing</p>
-            <p className="text-gray-800 text-xs">⭐ 4.{(index % 6) + 4} · Readers' Choice</p>
+            <p className="text-base text-teal-600 font-semibold mb-1 truncate">{book.title}</p>
+                  <Link
+                    to={`/book/${book.id}`}
+                    className="inline-block mt-2 px-4 py-2 bg-[#579DA5] text-white rounded hover:bg-[#478c94]"
+                  >
+                    Baca Buku
+                  </Link>
           </div>
         </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

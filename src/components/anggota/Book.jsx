@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../assets/tailwind.css';
 import BannerImg from '../../assets/perpustakaan.jpeg';
-import Book1 from '../../assets/book1.jpeg';
-import Book2 from '../../assets/book2.jpeg';
-import Book3 from '../../assets/book3.jpeg';
-import Book4 from '../../assets/Book4.jpeg';
+import { supabase } from '../../services/supaBase';
+import { Link } from 'react-router-dom';
 
 const Book = () => {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const booksPerPage = 4;
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('books')
+        .select('*')
+        .eq('upload_status', 'approved');
+
+      if (error) {
+        console.error('Error fetching books:', error);
+      } else {
+        const shuffled = data.sort(() => 0.5 - Math.random());
+        const paginated = shuffled.slice((page - 1) * booksPerPage, page * booksPerPage);
+        setBooks(paginated);
+      }
+      setLoading(false);
+    };
+    fetchBooks();
+  }, [page]);
+
   return (
     <div className="book-page bg-[#c7e2e5] min-h-screen">
-
       {/* Banner */}
       <div>
         <img src={BannerImg} alt="Library" className="w-full h-[450px] object-cover" />
@@ -21,60 +43,61 @@ const Book = () => {
           <h2 className="text-3xl font-bold text-gray-800">
             <span className="text-teal-600">SIPerpus</span> Featured Collection
           </h2>
-          <button className="border border-red-500 text-red-600 px-4 py-2 rounded-full font-semibold hover:bg-red-50">
+          <button
+            onClick={() => window.location.href = '/anggota/books/all'}
+            className="border border-red-500 text-red-600 px-4 py-2 rounded-full font-semibold hover:bg-red-50"
+          >
             View All
           </button>
         </div>
 
-        {/* Description */}
         <div className="text-gray-600 text-base font-semibold leading-relaxed mb-12">
           <p>A curated selection of our most borrowed and loved books. Borrow anytime for free,</p>
           <p>with optional donation to help us grow. Enjoy reading wherever you are, with collections from poetry to architecture.</p>
         </div>
 
         {/* Book Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-
-          {/* Book 1 */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer">
-            <img src={Book1} alt="Book 1" className="w-full h-[450px] object-cover" />
-            <div className="p-5">
-              <p className="text-base text-teal-600 font-semibold mb-1">Poetry | Literature</p>
-              <p className="text-gray-700 text-sm mb-2">Free Borrowing</p>
-              <p className="text-gray-800 text-xs">⭐ 4.5 · Donation Helps Us Thrive</p>
-            </div>
+        {loading ? (
+          <p className="text-center text-gray-600">Loading books...</p>
+        ) : books.length === 0 ? (
+          <p className="text-center text-gray-600">Tidak ada buku yang tersedia.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {books.map((book) => (
+              <div
+                key={book.id}
+                className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer"
+              >
+                <img src={book.image_url} alt={book.title} className="w-full h-[450px] object-cover" />
+                <div className="p-5">
+                  <p className="text-base text-teal-600 font-semibold mb-2">{book.title}</p>
+                  <Link
+                    to={`/anggota/book/${book.id}`}
+                    className="inline-block mt-2 px-4 py-2 bg-[#579DA5] text-white rounded hover:bg-[#478c94]"
+                  >
+                    Baca Buku
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
+        )}
 
-          {/* Book 2 */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer">
-            <img src={Book2} alt="Book 2" className="w-full h-[450px] object-cover" />
-            <div className="p-5">
-              <p className="text-base text-teal-600 font-semibold mb-1">Fiction | Mystery</p>
-              <p className="text-gray-700 text-sm mb-2">Free Borrowing</p>
-              <p className="text-gray-800 text-xs">⭐ 4.5 · Voluntary Donation</p>
-            </div>
-          </div>
-
-          {/* Book 3 */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer">
-            <img src={Book3} alt="Book 3" className="w-full h-[450px] object-cover" />
-            <div className="p-5">
-              <p className="text-base text-teal-600 font-semibold mb-1">Non-Fiction | Architecture</p>
-              <p className="text-gray-700 text-sm mb-2">Free Borrowing</p>
-              <p className="text-gray-800 text-xs">⭐ 4.5 · Support with Donation</p>
-            </div>
-          </div>
-
-          {/* Book 4 */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer">
-            <img src={Book4} alt="Book 4" className="w-full h-[450px] object-cover" />
-            <div className="p-5">
-              <p className="text-base text-teal-600 font-semibold mb-1">Science | Biography</p>
-              <p className="text-gray-700 text-sm mb-2">Free Borrowing</p>
-              <p className="text-gray-800 text-xs">⭐ 4.7 · Readers' Favorite</p>
-            </div>
-          </div>
-
+        {/* Pagination */}
+        <div className="flex justify-center mt-8 space-x-4">
+          <button
+            className="px-4 py-2 border rounded hover:bg-gray-100"
+            disabled={page === 1}
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Previous
+          </button>
+          <button
+            className="px-4 py-2 border rounded hover:bg-gray-100"
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

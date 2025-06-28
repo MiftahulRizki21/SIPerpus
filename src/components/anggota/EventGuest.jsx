@@ -101,7 +101,7 @@ const EventGuest = () => {
             initial="hidden"
             whileHover={{ scale: 1.05 }}
             animate="show"
-            onClick={() => navigate(`/event/${headline.id}`)}
+            onClick={() => navigate(`/anggota/event/${headline.id}`)}
 
             className="bg-white rounded-2xl shadow-xl overflow-hidden relative h-[500px] w-full"
           >
@@ -133,7 +133,7 @@ const EventGuest = () => {
               key={event.id}
               variants={cardVariants}
               whileHover={{ scale: 1.05 }}
-              onClick={() => navigate(`/event/${event.id}`)}
+              onClick={() => navigate(`/anggota/event/${event.id}`)}
               className="cursor-pointer bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden h-[250px]"
             >
               <img
