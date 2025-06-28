@@ -66,7 +66,7 @@ const UploadForm = () => {
   return (
     <div className="upload-page max-w-4xl mx-auto p-8 bg-gray-50 rounded-xl shadow-md mt-10">
       {/* Tombol Kembali */}
-      <Link to="/anggota/riwayat" className="text-[#579DA5] hover:text-[#478c94] text-2xl mb-4 inline-block">←</Link>
+      <Link to="/anggota/upload" className="text-[#579DA5] hover:text-[#478c94] text-2xl mb-4 inline-block">←</Link>
 
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-700">Upload Data</h1>
 
