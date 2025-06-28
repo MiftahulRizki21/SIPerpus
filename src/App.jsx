@@ -38,6 +38,9 @@ import About from './pages/guest/About';
 import Contact from './pages/guest/Contact';
 import Book from './pages/guest/Book';
 import BookList from './pages/guest/BookList';
+import EventGuest from './pages/guest/EventGuest';
+import EventDetail from './pages/guest/EventDetail';
+
 
 // 🔥 Tambahkan import Hero di sini
 import Hero from "./components/guest/Hero";
@@ -55,6 +58,9 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/book" element={<Book />} />
         <Route path="/books/all" element={<BookList />} />
+        <Route path="/eventguest" element={<EventGuest />} />
+        <Route path="/event/:id" element={<EventDetail />} />
+
       </Route>
 
       {/* Anggota routes */}

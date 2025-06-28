@@ -66,4 +66,20 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+
+  .eventguest {
+  background-color: #F0FAFB;
+  min-height: 100vh;
+  }
 }
+
+/* ⛳️ Tambahkan di luar blok media */
+@layer utilities {
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+

@@ -22,7 +22,7 @@ const Navbar = () => {
           <Link to="/" className="hover:text-[#579DA5] transition">Home</Link>
           <Link to="/about" className="hover:text-[#579DA5] transition">About</Link>
           <Link to="/book" className="hover:text-[#579DA5] transition">Book</Link>
-          <Link to="/events" className="hover:text-[#579DA5] transition">Events</Link>
+          <Link to="/eventguest" className="hover:text-[#579DA5] transition">Events</Link>
           <Link to="/contact" className="hover:text-[#579DA5] transition">Contact</Link>
           <Link to="/donation" className="hover:text-[#579DA5] transition">Donation</Link>
           <Link to="/login" className="hover:text-[#579DA5] transition font-bold">Login</Link>
