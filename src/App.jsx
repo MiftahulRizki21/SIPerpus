@@ -43,7 +43,7 @@ import EventDetail from './pages/guest/EventDetail';
 
 
 import Hero from "./components/guest/Hero";
-
+import PrivateRoute from "./utils/PrivateRoute";
 export default function App() {
   return (
     <Routes>
@@ -63,31 +63,37 @@ export default function App() {
       </Route>
 
       {/* Anggota routes */}
-      <Route element={<AnggotaLayout />}>
-        <Route path="/anggota/about" element={<AboutAnggota />} />
-        <Route path="/anggota/beranda" element={<Beranda />} />
-        <Route path="/anggota/book" element={<BookAnggota />} />
-        <Route path="/anggota/contact" element={<ContactAnggota />} />
-        <Route path="/anggota/donation" element={<DonationAnggota />} />
-        <Route path="/anggota/login" element={<LoginAnggota />} />
-        <Route path="/anggota/login-upload" element={<LoginUpload />} />
-        <Route path="/anggota/lokasi" element={<Lokasi />} />
-        <Route path="/anggota/profile" element={<ProfileAnggota />} />
-        <Route path="/anggota/riwayat" element={<RiwayatBacaan />} />
-        <Route path="/anggota/upload" element={<UploadTulisan />} />
-        <Route path="/anggota/upload-form" element={<UploadForm />} />
+      <Route element={<PrivateRoute allowedRole="anggota" />}>
+        <Route element={<AnggotaLayout />}>
+          <Route path="/anggota/about" element={<AboutAnggota />} />
+          <Route path="/anggota/beranda" element={<Beranda />} />
+          <Route path="/anggota/book" element={<BookAnggota />} />
+          <Route path="/anggota/contact" element={<ContactAnggota />} />
+          <Route path="/anggota/donation" element={<DonationAnggota />} />
+          <Route path="/anggota/login" element={<LoginAnggota />} />
+          <Route path="/anggota/login-upload" element={<LoginUpload />} />
+          <Route path="/anggota/lokasi" element={<Lokasi />} />
+          <Route path="/anggota/profile" element={<ProfileAnggota />} />
+          <Route path="/anggota/riwayat" element={<RiwayatBacaan />} />
+          <Route path="/anggota/upload" element={<UploadTulisan />} />
+          <Route path="/anggota/upload-form" element={<UploadForm />} />
+        </Route>
       </Route>
+      
 
       {/* Admin routes */}
-      <Route element={<MainLayout />}>
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/admin/members" element={<Members />} />
-        <Route path="/admin/approve-posts" element={<ApprovePosts />} />
-        <Route path="/admin/books" element={<Books />} />
-        <Route path="/admin/articles" element={<Articles />} />
-        <Route path="/admin/profile" element={<Profile />} />
-        <Route path="/admin/events" element={<Events />} />
+      <Route element={<PrivateRoute allowedRole="admin" />}>
+          <Route element={<MainLayout />}>
+            <Route path="/admin" element={<Dashboard />} />
+            <Route path="/admin/members" element={<Members />} />
+            <Route path="/admin/approve-posts" element={<ApprovePosts />} />
+            <Route path="/admin/books" element={<Books />} />
+            <Route path="/admin/articles" element={<Articles />} />
+            <Route path="/admin/profile" element={<Profile />} />
+            <Route path="/admin/events" element={<Events />} />
+          </Route>
       </Route>
     </Routes>
+      
   );
 }
