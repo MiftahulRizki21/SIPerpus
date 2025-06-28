@@ -119,14 +119,22 @@ const Register = () => {
               <label className="block mb-1 text-gray-700 font-semibold">First name</label>
               <input
                 type="text"
-                className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400"
+                name="firstName"
+                value={form.firstName}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
             <div className="w-full">
               <label className="block mb-1 text-gray-700 font-semibold">Last name</label>
               <input
                 type="text"
-                className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400"
+                name="lastName"
+                value={form.lastName}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
           </motion.div>
@@ -142,16 +150,22 @@ const Register = () => {
               <select
                 className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400"
                 style={{ height: "47px" }}
-              >
-                <option value="">Select gender</option>
-                <option value="Male">Laki-laki</option>
-                <option value="Female">Perempuan</option>
+                  name="gender"
+                  value={form.gender}
+                  onChange={handleChange}
+                              >
+                  <option value="">Select gender</option>
+                  <option value="Male">Laki-laki</option>
+                  <option value="Female">Perempuan</option>
               </select>
             </div>
             <div className="w-full">
               <label className="block mb-1 text-gray-700 font-semibold">Birthdate</label>
               <input
-                type="date"
+                 type="date"
+  name="birthdate"
+  value={form.birthdate}
+  onChange={handleChange}
                 className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
@@ -178,6 +192,9 @@ const Register = () => {
             <div className="w-full md:w-1/2">
               <label className="block mb-1 text-gray-700 font-semibold">Address</label>
               <textarea
+                name="address"
+                value={form.address}
+                onChange={handleChange}
                 className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400 h-[140px]"
               ></textarea>
             </div>
@@ -185,14 +202,20 @@ const Register = () => {
               <div>
                 <label className="block mb-1 text-gray-700 font-semibold">Phone</label>
                 <input
-                  type="tel"
+                    type="tel"
+  name="phone"
+  value={form.phone}
+  onChange={handleChange}
                   className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
               </div>
               <div>
                 <label className="block mb-1 text-gray-700 font-semibold">Email</label>
                 <input
-                  type="email"
+                    type="email"
+  name="email"
+  value={form.email}
+  onChange={handleChange}
                   className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
               </div>
@@ -208,14 +231,20 @@ const Register = () => {
             <div className="w-full">
               <label className="block mb-1 text-gray-700 font-semibold">Password</label>
               <input
-                type="password"
+                  type="password"
+  name="password"
+  value={form.password}
+  onChange={handleChange}
                 className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
             <div className="w-full">
               <label className="block mb-1 text-gray-700 font-semibold">Confirm Password</label>
               <input
-                type="password"
+                  type="password"
+  name="confirmPassword"
+  value={form.confirmPassword}
+  onChange={handleChange}
                 className="w-full px-4 py-2 bg-white rounded-md border border-gray-400 shadow-[0_2px_6px_rgba(156,163,175,0.5)] focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
