@@ -8,24 +8,58 @@ const ReadBook = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBook = async () => {
-      const { data, error } = await supabase
+    const fetchBookAndTrack = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData?.session?.user?.id;
+      if (!userId) return;
+
+      // Ambil file_path dari buku
+      const { data: bookData, error: bookError } = await supabase
         .from("books")
         .select("file_path")
         .eq("id", id)
         .single();
 
-      if (error) {
-        console.error("Gagal mengambil buku:", error);
+      if (bookError || !bookData) {
+        console.error("Gagal mengambil buku:", bookError);
         return;
       }
 
-      const { data: publicUrl } = supabase.storage.from("buku").getPublicUrl(data.file_path);
-      setPdfUrl(publicUrl?.publicUrl + "#toolbar=0&navpanes=0&scrollbar=0"); // toolbar hidden
+      // Ambil URL PDF dari storage
+      const { data: publicUrl } = supabase
+        .storage
+        .from("buku")
+        .getPublicUrl(bookData.file_path);
+
+      setPdfUrl(publicUrl?.publicUrl + "#toolbar=0&navpanes=0&scrollbar=0");
       setLoading(false);
+
+      // Cek apakah user sudah pernah membaca buku ini
+      const { data: historyData, error: checkError } = await supabase
+        .from("reading_history")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("book_id", parseInt(id))
+        .maybeSingle();
+
+      if (checkError) {
+        console.error("Gagal memeriksa riwayat:", checkError);
+        return;
+      }
+
+      // Insert jika belum ada
+      if (!historyData) {
+        const { error: insertError } = await supabase
+          .from("reading_history")
+          .insert([{ user_id: userId, book_id: parseInt(id) }]);
+
+        if (insertError) {
+          console.error("Gagal mencatat riwayat baca:", insertError);
+        }
+      }
     };
 
-    fetchBook();
+    fetchBookAndTrack();
   }, [id]);
 
   if (loading) return <p className="text-center mt-10">Memuat buku...</p>;

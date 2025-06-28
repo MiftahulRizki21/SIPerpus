@@ -144,8 +144,8 @@ const Register = () => {
                 style={{ height: "47px" }}
               >
                 <option value="">Select gender</option>
-                <option value="male">Laki-laki</option>
-                <option value="female">Perempuan</option>
+                <option value="Male">Laki-laki</option>
+                <option value="Female">Perempuan</option>
               </select>
             </div>
             <div className="w-full">
