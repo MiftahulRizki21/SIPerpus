@@ -22,18 +22,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
       </div>
       
       <div className="ml-4 flex items-center space-x-4">
-        <button className="p-1 text-white hover:text-[#E0F7FA] relative transition-colors duration-200">
-          <FiHelpCircle size={20} />
-        </button>
-        
-        <button className="p-1 text-white hover:text-[#E0F7FA] relative transition-colors duration-200">
-          <FiSettings size={20} />
-        </button>
-        
-        <button className="p-1 text-white hover:text-[#E0F7FA] relative transition-colors duration-200">
-          <FiBell size={20} />
-          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-[#FF6B6B] animate-pulse"></span>
-        </button>
+
         
         <div className="ml-2 flex items-center">
           <div className="h-8 w-8 rounded-full bg-[#47818A] flex items-center justify-center text-white font-medium shadow-sm">
