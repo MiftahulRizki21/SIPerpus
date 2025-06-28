@@ -38,12 +38,6 @@ const ReadingHistory = () => {
       >
         <div className="flex flex-col items-center space-y-4">
           <h1 className="text-4xl font-bold">Riwayat Bacaan</h1>
-          <button
-            onClick={() => window.location.href = "/anggota/upload-form"}
-            className="px-6 py-2 bg-white text-[#379fa3] font-semibold rounded-full shadow hover:bg-gray-100 transition"
-          >
-            Upload
-          </button>
         </div>
       </div>
 
