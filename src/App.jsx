@@ -11,11 +11,10 @@ import AnggotaLayout from "./layout/anggota/AnggotaLayout";
 // Import Pages
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const Members = lazy(() => import("./pages/admin/Members"));
-const ApprovePosts = lazy(() => import("./pages/admin/ApprovePosts"));
 const Books = lazy(() => import("./pages/admin/Books"));
 const Articles = lazy(() => import("./pages/admin/Articles"));
 const Profile = lazy(() => import("./pages/admin/Profile"));
-const Events = lazy(() => import("./pages/admin/Events"));
+const Approves = lazy(() => import("./pages/admin/Approves"));
 
 // Anggota
 const AboutAnggota = lazy(() => import("./components/anggota/About"));
@@ -102,11 +101,10 @@ export default function App() {
           <Route element={<MainLayout />}>
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/members" element={<Members />} />
-            <Route path="/admin/approve-posts" element={<ApprovePosts />} />
             <Route path="/admin/books" element={<Books />} />
             <Route path="/admin/articles" element={<Articles />} />
             <Route path="/admin/profile" element={<Profile />} />
-            <Route path="/admin/events" element={<Events />} />
+            <Route path="/admin/Approves" element={<Approves />} />
           </Route>
       </Route>
     </Routes>
