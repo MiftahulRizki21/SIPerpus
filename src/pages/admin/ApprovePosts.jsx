@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   FiCheck, 
   FiX, 
@@ -12,69 +12,65 @@ import {
   FiChevronDown,
   FiUser
 } from 'react-icons/fi'
+import { supabase } from "../../services/supaBase";
 
 const ApprovePosts = () => {
   const [activeTab, setActiveTab] = useState('pending')
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
   
-  // Sample post data with more details
-  const posts = [
-    {
-      id: 1,
-      title: 'Panduan Lengkap React untuk Pemula',
-      author: 'John Doe',
-      authorAvatar: 'JD',
-      date: '2023-05-15',
-      category: 'Teknologi',
-      status: 'pending',
-      wordCount: 1250,
-      readTime: '6 min',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod...',
-      lastEdited: '2023-05-14'
-    },
-    {
-      id: 2,
-      title: 'Sejarah Perkembangan Sastra Indonesia',
-      author: 'Jane Smith',
-      authorAvatar: 'JS',
-      date: '2023-05-18',
-      category: 'Sastra',
-      status: 'pending',
-      wordCount: 1800,
-      readTime: '9 min',
-      content: 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae...',
-      lastEdited: '2023-05-17'
-    },
-    {
-      id: 3,
-      title: 'Teknik Dasar Fotografi Digital',
-      author: 'Bob Johnson',
-      authorAvatar: 'BJ',
-      date: '2023-05-20',
-      category: 'Fotografi',
-      status: 'approved',
-      wordCount: 950,
-      readTime: '5 min',
-      content: 'Praesent commodo cursus magna, vel scelerisque nisl consectetur et...',
-      approvedBy: 'Admin 1',
-      approvedDate: '2023-05-21'
-    },
-    {
-      id: 4,
-      title: 'Resep Masakan Tradisional Jawa',
-      author: 'Alice Brown',
-      authorAvatar: 'AB',
-      date: '2023-05-22',
-      category: 'Kuliner',
-      status: 'rejected',
-      wordCount: 750,
-      readTime: '4 min',
-      content: 'Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla...',
-      rejectedReason: 'Konten tidak sesuai pedoman',
-      rejectedDate: '2023-05-23'
+  // Fetch posts from Supabase
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true)
+        const { data, error } = await supabase
+          .from('writings')
+          .select(`
+            id,
+            title,
+            content,
+            category,
+            status,
+            word_count,
+            read_time,
+            created_at,
+            updated_at,
+            rejected_reason,
+            user:user_id (id, name, avatar)
+          `)
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        
+        // Transform data to match our component structure
+        const formattedData = data.map(post => ({
+          id: post.id,
+          title: post.title,
+          author: post.user?.name || 'Unknown',
+          authorAvatar: post.user?.avatar || post.user?.name?.charAt(0) || 'U',
+          date: new Date(post.created_at).toISOString().split('T')[0],
+          category: post.category,
+          status: post.status,
+          wordCount: post.word_count,
+          readTime: post.read_time,
+          content: post.content,
+          lastEdited: new Date(post.updated_at).toISOString().split('T')[0],
+          rejectedReason: post.rejected_reason
+        }))
+        
+        setPosts(formattedData)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+    
+    fetchPosts()
+  }, [])
 
   // Available categories for filter
   const categories = ['all', ...new Set(posts.map(post => post.category))]
@@ -87,10 +83,37 @@ const ApprovePosts = () => {
     (selectedCategory === 'all' || post.category === selectedCategory)
   )
 
-  const handleStatusChange = (postId, newStatus) => {
-    // API call would go here
-    console.log(`Post ${postId} status changed to ${newStatus}`)
-    alert(`Status tulisan ID ${postId} berhasil diubah menjadi ${newStatus === 'approved' ? 'Disetujui' : 'Ditolak'}`)
+  const handleStatusChange = async (postId, newStatus) => {
+    try {
+      const { error } = await supabase
+        .from('writings')
+        .update({ 
+          status: newStatus,
+          updated_at: new Date().toISOString(),
+          ...(newStatus === 'rejected' && { rejected_reason: 'Tidak sesuai pedoman' }),
+          ...(newStatus === 'approved' && { approved_at: new Date().toISOString() })
+        })
+        .eq('id', postId)
+      
+      if (error) throw error
+      
+      // Update local state
+      setPosts(posts.map(post => 
+        post.id === postId 
+          ? { 
+              ...post, 
+              status: newStatus,
+              ...(newStatus === 'rejected' && { rejectedReason: 'Tidak sesuai pedoman' }),
+              ...(newStatus === 'approved' && { approvedDate: new Date().toISOString().split('T')[0] })
+            } 
+          : post
+      ))
+      
+      alert(`Status tulisan ID ${postId} berhasil diubah menjadi ${newStatus === 'approved' ? 'Disetujui' : 'Ditolak'}`)
+    } catch (error) {
+      console.error('Error updating post status:', error)
+      alert('Gagal mengubah status tulisan')
+    }
   }
 
   const viewPreview = (post) => {
@@ -103,16 +126,22 @@ const ApprovePosts = () => {
       'Waktu Baca': post.readTime,
       'Terakhir Diedit': post.lastEdited,
       ...(post.status === 'approved' && {
-        'Disetujui Oleh': post.approvedBy,
-        'Tanggal Persetujuan': post.approvedDate
+        'Tanggal Persetujuan': post.approvedDate || 'Tidak tersedia'
       }),
       ...(post.status === 'rejected' && {
-        'Alasan Penolakan': post.rejectedReason,
-        'Tanggal Penolakan': post.rejectedDate
+        'Alasan Penolakan': post.rejectedReason || 'Tidak tersedia'
       })
     }
     
     alert(`Detail Tulisan:\n\n${Object.entries(details).map(([key, value]) => `${key}: ${value}`).join('\n')}`)
+  }
+
+  if (loading) {
+    return (
+      <div className="p-6 flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#579DA5]"></div>
+      </div>
+    )
   }
 
   return (
@@ -215,7 +244,11 @@ const ApprovePosts = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-[#579DA5]">Rata-rata Waktu Baca</p>
-              <p className="text-2xl font-semibold text-[#2C3E50]">6 min</p>
+              <p className="text-2xl font-semibold text-[#2C3E50]">
+                {posts.length > 0 
+                  ? `${Math.round(posts.reduce((sum, post) => sum + parseInt(post.readTime || '0'), 0) / posts.length)} min` 
+                  : '0 min'}
+              </p>
             </div>
             <div className="p-3 rounded-full bg-[#E0F7FA] text-[#579DA5]">
               <FiUser size={20} />
@@ -262,7 +295,7 @@ const ApprovePosts = () => {
                             {post.category}
                           </span>
                           <span className="text-xs text-[#E0F2F1]">•</span>
-                          <span className="text-xs text-[#579DA5]">{post.readTime} baca</span>
+                          <span className="text-xs text-[#579DA5]">{post.readTime || '0 min'} baca</span>
                         </div>
                       </div>
                     </div>

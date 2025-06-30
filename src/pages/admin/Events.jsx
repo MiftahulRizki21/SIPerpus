@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { 
   FiSearch, 
   FiPlus, 
@@ -14,104 +14,99 @@ import {
   FiCheckCircle,
   FiAlertTriangle,
   FiXCircle
-} from 'react-icons/fi'
-import { format, parseISO, isBefore, isAfter } from 'date-fns'
+} from 'react-icons/fi';
+import { format, parseISO } from 'date-fns';
 import { supabase } from "../../services/supaBase";
 
 const Events = () => {
-  const [events, setEvents] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [filterStatus, setFilterStatus] = useState('all')
-  const eventsPerPage = 5
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterStatus, setFilterStatus] = useState('all');
+  const eventsPerPage = 5;
 
   // Fetch events from Supabase
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         const { data, error } = await supabase
           .from('events')
           .select('*')
-          .order('start_time', { ascending: true })
+          .order('start_time', { ascending: false }); // Menggunakan start_time sebagai pengurutan
 
-        if (error) throw error
+        if (error) throw error;
         
-        // Transform the data to match our UI structure
+        console.log('Data from Supabase:', data); // Debug log
+
+        if (!data || data.length === 0) {
+          console.log('No events found in database');
+          setEvents([]);
+          return;
+        }
+
+        // Transform data sesuai struktur tabel
         const transformedEvents = data.map(event => ({
           id: event.id,
-          title: event.title,
-          description: event.description,
-          location: event.location,
-          start_time: event.start_time,
-          end_time: event.end_time,
-          created_by: event.created_by,
-          // Add derived fields for UI
-          date: event.start_time.split('T')[0],
-          time: `${format(parseISO(event.start_time), 'HH:mm')} - ${format(parseISO(event.end_time), 'HH:mm')}`,
-          status: getEventStatus(event.start_time, event.end_time),
-          participants: Math.floor(Math.random() * 100), // Random for demo - replace with actual data if available
-          maxParticipants: 100, // Default value - replace with actual data if available
-          image: getEventImage(event.title) // Helper function to get relevant image
-        }))
-        
-        setEvents(transformedEvents)
+          title: event.title || 'Event Tanpa Judul',
+          description: event.description || 'Tidak ada deskripsi',
+          location: event.location || 'Lokasi belum ditentukan',
+          start_time: event.start_time || new Date().toISOString(),
+          end_time: event.end_time || new Date(Date.now() + 2*60*60*1000).toISOString(),
+          created_by: event.created_by || 'admin',
+          status: event.status || 'pending', // Menggunakan nilai default dari tabel
+          image_url: event.image_url || getEventImage(event.title),
+          date: event.start_time ? event.start_time.split('T')[0] : format(new Date(), 'yyyy-MM-dd'),
+          time: event.start_time && event.end_time 
+            ? `${format(parseISO(event.start_time), 'HH:mm')} - ${format(parseISO(event.end_time), 'HH:mm')}`
+            : '00:00 - 00:00',
+          participants: 0, // Default value, bisa diambil dari relasi tabel lain jika ada
+          maxParticipants: 50 // Default value
+        }));
+
+        setEvents(transformedEvents);
       } catch (error) {
-        console.error('Error fetching events:', error.message)
+        console.error('Error fetching events:', error.message);
+        alert('Gagal memuat data event. Silakan coba lagi.');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchEvents()
-  }, [])
+    fetchEvents();
+  }, []);
 
-  // Helper function to determine event status
-  const getEventStatus = (startTime, endTime) => {
-    const now = new Date()
-    const start = new Date(startTime)
-    const end = new Date(endTime)
-    
-    if (isBefore(end, now)) return 'Completed'
-    if (isAfter(start, now)) return 'Upcoming'
-    return 'Ongoing'
-  }
-
-  // Helper function to get event image based on title
+  // Helper function to get event image
   const getEventImage = (title) => {
-    const keywords = ['workshop', 'seminar', 'training', 'conference', 'meeting']
-    const match = keywords.find(keyword => title.toLowerCase().includes(keyword))
-    return `https://source.unsplash.com/random/400x200/?${match || 'event'}`
-  }
-
-  // Update event status based on current date
-  const updatedEvents = events.map(event => {
-    return { 
-      ...event,
-      status: getEventStatus(event.start_time, event.end_time)
-    }
-  })
+    if (!title) return 'https://source.unsplash.com/random/400x200/?event';
+    
+    const keywords = ['workshop', 'seminar', 'training', 'conference', 'meeting'];
+    const match = keywords.find(keyword => title.toLowerCase().includes(keyword));
+    return `https://source.unsplash.com/random/400x200/?${match || 'event'}`;
+  };
 
   // Filter events
-  const filteredEvents = updatedEvents.filter(event => {
+  const filteredEvents = events.filter(event => {
+    if (!event) return false;
+    
     const matchesSearch = 
-      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.description.toLowerCase().includes(searchTerm.toLowerCase())
+      event.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.description?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = 
       filterStatus === 'all' || 
-      event.status.toLowerCase() === filterStatus.toLowerCase()
+      event.status?.toLowerCase() === filterStatus.toLowerCase();
     
-    return matchesSearch && matchesStatus
-  })
+    return matchesSearch && matchesStatus;
+  });
 
   // Pagination logic
-  const indexOfLastEvent = currentPage * eventsPerPage
-  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage
-  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent)
-  const totalPages = Math.ceil(filteredEvents.length / eventsPerPage)
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+  const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
 
   // Delete event
   const deleteEvent = async (id) => {
@@ -120,70 +115,68 @@ const Events = () => {
         const { error } = await supabase
           .from('events')
           .delete()
-          .eq('id', id)
+          .eq('id', id);
 
-        if (error) throw error
+        if (error) throw error;
 
-        setEvents(events.filter(event => event.id !== id))
+        setEvents(events.filter(event => event.id !== id));
       } catch (error) {
-        console.error('Error deleting event:', error.message)
-        alert('Gagal menghapus event')
+        console.error('Error deleting event:', error.message);
+        alert('Gagal menghapus event');
       }
     }
-  }
+  };
 
   // Status styling
   const getStatusColor = (status) => {
-    switch(status) {
-      case 'Upcoming': 
-        return { 
-          bg: 'bg-[#e6f7f9]', 
-          text: 'text-[#1a6d7a]',
-          icon: <FiCalendar className="text-[#579DA5]" />
-        }
-      case 'Ongoing': 
-        return { 
-          bg: 'bg-[#fff8e6]', 
-          text: 'text-[#8a6d3b]',
-          icon: <FiAlertTriangle className="text-[#ffc107]" />
-        }
-      case 'Completed': 
+    switch(status.toLowerCase()) {
+      case 'approved': 
         return { 
           bg: 'bg-[#e6f9f0]', 
           text: 'text-[#1a7a4a]',
           icon: <FiCheckCircle className="text-[#28a745]" />
-        }
-      case 'Cancelled': 
+        };
+      case 'pending': 
+        return { 
+          bg: 'bg-[#fff8e6]', 
+          text: 'text-[#8a6d3b]',
+          icon: <FiAlertTriangle className="text-[#ffc107]" />
+        };
+      case 'rejected': 
         return { 
           bg: 'bg-[#fde8e8]', 
           text: 'text-[#a94442]',
           icon: <FiXCircle className="text-[#dc3545]" />
-        }
+        };
       default: 
         return { 
           bg: 'bg-gray-50', 
           text: 'text-gray-800',
           icon: null
-        }
+        };
     }
-  }
+  };
 
   // Format date
   const formatDate = (dateString) => {
-    return format(parseISO(dateString), 'EEEE, dd MMMM yyyy')
-  }
+    try {
+      return format(parseISO(dateString), 'EEEE, dd MMMM yyyy');
+    } catch {
+      return 'Tanggal tidak valid';
+    }
+  };
 
   // View event details
   const viewEventDetails = (event) => {
-    alert(`Detail Event:\n\nJudul: ${event.title}\nDeskripsi: ${event.description}\nTanggal: ${formatDate(event.start_time)}\nWaktu: ${event.time}\nLokasi: ${event.location}\nStatus: ${event.status}\nPeserta: ${event.participants}/${event.maxParticipants}`)
-  }
+    alert(`Detail Event:\n\nJudul: ${event.title}\nDeskripsi: ${event.description}\nTanggal: ${formatDate(event.start_time)}\nWaktu: ${event.time}\nLokasi: ${event.location}\nStatus: ${event.status}`);
+  };
 
   if (loading) {
     return (
       <div className="p-6 flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#579DA5]"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -194,8 +187,8 @@ const Events = () => {
             <FiCalendar size={24} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Manajemen Event</h1>
-            <p className="text-gray-500">Kelola acara dan kegiatan perpustakaan</p>
+            <h1 className="text-2xl font-bold text-gray-800">Kelola Persetujuan</h1>
+            <p className="text-gray-500">Kelola permintaan persetujuan upload</p>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -223,7 +216,7 @@ const Events = () => {
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Event</p>
+              <p className="text-sm font-medium text-gray-500">Total Persetujuan</p>
               <p className="text-2xl font-semibold text-gray-800">{events.length}</p>
             </div>
             <div className="p-3 rounded-full bg-[#e6f7f9] text-[#579DA5]">
@@ -234,22 +227,9 @@ const Events = () => {
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Mendatang</p>
-              <p className="text-2xl font-semibold text-[#579DA5]">
-                {updatedEvents.filter(e => e.status === 'Upcoming').length}
-              </p>
-            </div>
-            <div className="p-3 rounded-full bg-[#e6f7f9] text-[#579DA5]">
-              <FiClock size={20} />
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Selesai</p>
+              <p className="text-sm font-medium text-gray-500">Approved</p>
               <p className="text-2xl font-semibold text-[#28a745]">
-                {updatedEvents.filter(e => e.status === 'Completed').length}
+                {events.filter(e => e.status === 'approved').length}
               </p>
             </div>
             <div className="p-3 rounded-full bg-[#e6f9f0] text-[#28a745]">
@@ -260,13 +240,26 @@ const Events = () => {
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Total Peserta</p>
-              <p className="text-2xl font-semibold text-[#6f42c1]">
-                {events.reduce((sum, event) => sum + event.participants, 0)}
+              <p className="text-sm font-medium text-gray-500">Pending</p>
+              <p className="text-2xl font-semibold text-[#ffc107]">
+                {events.filter(e => e.status === 'pending').length}
               </p>
             </div>
-            <div className="p-3 rounded-full bg-[#f0e6ff] text-[#6f42c1]">
-              <FiUsers size={20} />
+            <div className="p-3 rounded-full bg-[#fff8e6] text-[#ffc107]">
+              <FiAlertTriangle size={20} />
+            </div>
+          </div>
+        </div>
+        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-500">Rejected</p>
+              <p className="text-2xl font-semibold text-[#dc3545]">
+                {events.filter(e => e.status === 'rejected').length}
+              </p>
+            </div>
+            <div className="p-3 rounded-full bg-[#fde8e8] text-[#dc3545]">
+              <FiXCircle size={20} />
             </div>
           </div>
         </div>
@@ -286,9 +279,9 @@ const Events = () => {
               className="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-[#579DA5] focus:border-[#579DA5]"
             >
               <option value="all">Semua Status</option>
-              <option value="upcoming">Mendatang</option>
-              <option value="ongoing">Berlangsung</option>
-              <option value="completed">Selesai</option>
+              <option value="approved">Approved</option>
+              <option value="pending">Pending</option>
+              <option value="rejected">Rejected</option>
             </select>
           </div>
         </div>
@@ -305,7 +298,6 @@ const Events = () => {
             <select className="text-sm border-0 focus:ring-[#579DA5] focus:border-[#579DA5]">
               <option>Terbaru</option>
               <option>Terlama</option>
-              <option>Paling Banyak Peserta</option>
               <option>Judul (A-Z)</option>
             </select>
           </div>
@@ -314,13 +306,13 @@ const Events = () => {
         {currentEvents.length > 0 ? (
           <div className="divide-y divide-gray-200">
             {currentEvents.map((event) => {
-              const statusColor = getStatusColor(event.status)
+              const statusColor = getStatusColor(event.status);
               return (
                 <div key={event.id} className="p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-shrink-0 w-full md:w-48 h-32 overflow-hidden rounded-lg">
                       <img 
-                        src={event.image} 
+                        src={event.image_url} 
                         alt={event.title}
                         className="w-full h-full object-cover"
                       />
@@ -330,8 +322,7 @@ const Events = () => {
                         <h3 className="text-lg font-medium text-gray-800">{event.title}</h3>
                         <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${statusColor.bg} ${statusColor.text}`}>
                           {statusColor.icon}
-                          {event.status === 'Upcoming' ? 'Mendatang' : 
-                           event.status === 'Completed' ? 'Selesai' : 'Berlangsung'}
+                          {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
                         </div>
                       </div>
                       <p className="text-sm text-gray-500 mt-1">{event.description}</p>
@@ -378,7 +369,7 @@ const Events = () => {
                     </div>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         ) : (
@@ -421,7 +412,7 @@ const Events = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Events
+export default Events;
