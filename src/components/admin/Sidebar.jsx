@@ -19,7 +19,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     { path: "/admin/members", icon: <FiUsers />, text: "Kelola Anggota" },
     { path: "/admin/Approves", icon: <FiFileText />, text: "Kelola Persetujuan" },
     { path: "/admin/books", icon: <FiBook />, text: "Kelola Buku" },
-    { path: "/admin/articles", icon: <FiEdit />, text: "Tulisan Lainnya" },
     { path: "/admin/profile", icon: <FiUser />, text: "Profil" },
   ]
 
